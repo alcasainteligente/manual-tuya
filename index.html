@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AL Casa Inteligente · Manual Tuya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search */
+        .search-section {
+            margin: 20px 0 40px;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            padding: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            outline: none;
+            color: #ffffff;
+        }
+
+        .search-box input::placeholder {
+            color: #4b5563;
+        }
+
+        .search-box button {
+            padding: 12px 32px;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 4px;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+        }
+
+        .search-box button:hover {
+            background: #fb923c;
+        }
+
+        /* Categorias Grid - 9 itens lado a lado */
+        .categorias-section {
+            padding: 20px 0;
+        }
+
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .categoria-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px 8px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .categoria-card:hover {
+            border-color: rgba(34, 211, 238, 0.5);
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .categoria-icone {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .categoria-nome {
+            font-weight: 600;
+            font-size: 12px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .categoria-contador {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* Destaques */
+        .destaques {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 32px;
+            padding: 60px 0;
+            margin: 60px 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .section-title h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #9ca3af;
+        }
+
+        .automacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .automacao-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .automacao-card:hover {
+            border-color: rgba(34, 211, 238, 0.3);
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .automacao-titulo {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .automacao-descricao {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .tag.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .tag.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .tag.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .categorias-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            .automacoes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 32px;
+            }
+            
+            .categorias-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .automacoes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+            
+            .search-box button {
+                margin: 0 4px 4px 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .categorias-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </div>
+                
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <h2>Sua Casa,<br>Mais Inteligente</h2>
+            <p>Descubra como transformar o seu lar num espaço conectado, seguro e eficiente, sem obras e sem complicações.</p>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="pesquisa" placeholder="Pesquisar automação... (ex: luz escada, sensor movimento)">
+                <button id="btn-pesquisar" onclick="alert('🔍 Pesquisa disponível em breve')">Pesquisar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categorias Grid - 9 itens lado a lado -->
+    <section class="categorias-section">
+        <div class="container">
+            <div class="categorias-grid">
+                <a href="categorias/iluminacao.html" class="categoria-card">
+                    <div class="categoria-icone">💡</div>
+                    <div class="categoria-nome">Iluminação</div>
+                    <div class="categoria-contador">40</div>
+                </a>
+                <a href="categorias/seguranca.html" class="categoria-card">
+                    <div class="categoria-icone">🔒</div>
+                    <div class="categoria-nome">Segurança</div>
+                    <div class="categoria-contador">35</div>
+                </a>
+                <a href="categorias/clima.html" class="categoria-card">
+                    <div class="categoria-icone">🌡️</div>
+                    <div class="categoria-nome">Clima</div>
+                    <div class="categoria-contador">30</div>
+                </a>
+                <a href="categorias/eletrodomesticos.html" class="categoria-card">
+                    <div class="categoria-icone">⚡</div>
+                    <div class="categoria-nome">Energia</div>
+                    <div class="categoria-contador">30</div>
+                </a>
+                <a href="categorias/rotinas.html" class="categoria-card">
+                    <div class="categoria-icone">🎮</div>
+                    <div class="categoria-nome">Controlo</div>
+                    <div class="categoria-contador">30</div>
+                </a>
+                <a href="categorias/criancas.html" class="categoria-card">
+                    <div class="categoria-icone">👶</div>
+                    <div class="categoria-nome">Família</div>
+                    <div class="categoria-contador">25</div>
+                </a>
+                <a href="categorias/animais.html" class="categoria-card">
+                    <div class="categoria-icone">🐾</div>
+                    <div class="categoria-nome">Animais</div>
+                    <div class="categoria-contador">10</div>
+                </a>
+                <a href="categorias/idosos.html" class="categoria-card">
+                    <div class="categoria-icone">👴</div>
+                    <div class="categoria-nome">Acessibilidade</div>
+                    <div class="categoria-contador">10</div>
+                </a>
+                <a href="categorias/ifttt.html" class="categoria-card">
+                    <div class="categoria-icone">🔗</div>
+                    <div class="categoria-nome">IFTTT</div>
+                    <div class="categoria-contador">20</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destaques Section -->
+    <section class="destaques">
+        <div class="container">
+            <div class="section-title">
+                <h3>Automações em destaque</h3>
+                <p>As mais procuradas pelos nossos clientes</p>
+            </div>
+            
+            <div class="automacoes-grid">
+                <div class="automacao-card" onclick="alert('Luz de Boas-Vindas - Em breve com passo-a-passo')">
+                    <div class="automacao-titulo">Luz de Boas-Vindas</div>
+                    <div class="automacao-descricao">Acende a luz da entrada quando chegas a casa à noite.</div>
+                    <div class="automacao-meta">
+                        <span class="tag iniciante">⭐ Iniciante</span>
+                        <span class="tag">Entrada</span>
+                    </div>
+                </div>
+                <div class="automacao-card" onclick="alert('Modo Cinema - Em breve com passo-a-passo')">
+                    <div class="automacao-titulo">Modo Cinema</div>
+                    <div class="automacao-descricao">Luzes a 5%, estores fechados, projetor ligado.</div>
+                    <div class="automacao-meta">
+                        <span class="tag intermedio">⭐⭐ Intermédio</span>
+                        <span class="tag">Sala</span>
+                    </div>
+                </div>
+                <div class="automacao-card" onclick="alert('Alarme Perimetral - Em breve com passo-a-passo')">
+                    <div class="automacao-titulo">Alarme Perimetral</div>
+                    <div class="automacao-descricao">Alerta se portas/janelas forem abertas durante a noite.</div>
+                    <div class="automacao-meta">
+                        <span class="tag iniciante">⭐ Iniciante</span>
+                        <span class="tag">Segurança</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>AL Casa Inteligente</h4>
+                <p>O teu parceiro em automação residencial</p>
+                <p>📍 Montijo • Margem Sul</p>
+                <a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                         alt="WhatsApp" 
+                         style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                    Falar no WhatsApp
+                </a>
+            </div>
+            <div class="footer-col">
+                <h4>Categorias</h4>
+                <a href="categorias/iluminacao.html">Iluminação</a>
+                <a href="categorias/seguranca.html">Segurança</a>
+                <a href="categorias/clima.html">Clima</a>
+                <a href="categorias/eletrodomesticos.html">Energia</a>
+                <a href="categorias/rotinas.html">Controlo</a>
+                <a href="categorias/familia.html">Família</a>
+                <a href="categorias/animais.html">Animais</a>
+                <a href="categorias/acessibilidade.html">Acessibilidade</a>
+                <a href="categorias/ifttt.html">IFTTT</a>
+            </div>
+            <div class="footer-col">
+                <h4>Recursos</h4>
+                <a href="sobre-nos.html">Sobre nós</a>
+                <a href="contacto.html">Contacto</a>
+                <a href="privacidade.html">Privacidade</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+            <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        document.getElementById('pesquisa').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert('🔍 A pesquisar: ' + this.value);
+            }
+        });
+    </script>
+</body>
+</html>

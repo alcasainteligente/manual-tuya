@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima · AL Casa Inteligente</title>
+    <style>
+        /* === MESMO CSS DAS OUTRAS CATEGORIAS === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .categoria-header {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .categoria-header h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .categoria-header p {
+            color: #9ca3af;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .categoria-header .count {
+            color: #22d3ee;
+            font-size: 16px;
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .filtros {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .filtros-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filtro-grupo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filtro-grupo label {
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .filtro-grupo select {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filtro-grupo select option {
+            background: #030712;
+            color: #ffffff;
+        }
+
+        .automacoes-lista {
+            padding: 20px 0 40px;
+        }
+
+        .automacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .automacao-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .automacao-card:hover {
+            border-color: rgba(34, 211, 238, 0.3);
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .automacao-titulo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .automacao-descricao {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .automacao-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .tag.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .tag.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .tag.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .automacao-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        .tempo {
+            color: #9ca3af;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-favorito {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .btn-favorito:hover {
+            color: #f97316;
+        }
+
+        .paginacao {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .pagina {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: #9ca3af;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagina:hover {
+            border-color: #22d3ee;
+            color: #ffffff;
+        }
+
+        .pagina.ativa {
+            background: #22d3ee;
+            color: #030712;
+            border-color: #22d3ee;
+        }
+
+        .pagina.ativa:hover {
+            background: #7dd3fc;
+        }
+
+        .pagina.next {
+            width: auto;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .categoria-header h2 {
+                font-size: 32px;
+            }
+            .filtros-grid {
+                flex-direction: column;
+            }
+            .filtro-grupo {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="../index.html">Início</a> › <span>🌡️ Clima</span>
+        </div>
+    </div>
+
+    <div class="categoria-header">
+        <div class="container">
+            <h2>🌡️ Clima</h2>
+            <p>Controla temperatura, humidade e qualidade do ar em toda a casa</p>
+            <div class="count" id="total-count">30 automações disponíveis</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filtros">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label>Tipo:</label>
+                    <select id="filtro-tipo">
+                        <option value="todos">Todos</option>
+                        <option value="Temperatura">🌡️ Temperatura</option>
+                        <option value="Humidade">💧 Humidade</option>
+                        <option value="Qualidade Ar">🍃 Qualidade Ar</option>
+                        <option value="Estores">🪟 Estores</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label>Nível:</label>
+                    <select id="filtro-nivel">
+                        <option value="todos">Todos</option>
+                        <option value="iniciante">⭐ Iniciante</option>
+                        <option value="intermedio">⭐⭐ Intermédio</option>
+                        <option value="avancado">⭐⭐⭐ Avançado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <section class="automacoes-lista">
+            <div class="automacoes-grid" id="automacoes-grid"></div>
+            <div class="paginacao" id="paginacao"></div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="iluminacao.html">Iluminação</a>
+                    <a href="seguranca.html">Segurança</a>
+                    <a href="clima.html">Clima</a>
+                    <a href="eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lista de automações de Clima
+        const automacoes = [
+            // Temperatura (10)
+            { titulo: "Clima Perfeito ao Acordar", descricao: "AC liga 30 minutos antes de acordares para temperatura ideal.", nivel: "intermedio", tipo: "Temperatura", tempo: "5-8 min", slug: "clima-perfeito-acordar" },
+            { titulo: "Chegada a Casa Conforto", descricao: "AC liga quando estás a 10 minutos de casa.", nivel: "avancado", tipo: "Temperatura", tempo: "8-12 min", slug: "chegada-casa-conforto" },
+            { titulo: "Arrefecimento Noturno", descricao: "Liga ventilador se temperatura do quarto > 24° à noite.", nivel: "iniciante", tipo: "Temperatura", tempo: "4-6 min", slug: "arrefecimento-noturno" },
+            { titulo: "Aquecimento Zonado", descricao: "Aquece apenas divisões ocupadas.", nivel: "avancado", tipo: "Temperatura", tempo: "10-15 min", slug: "aquecimento-zonado" },
+            { titulo: "Proteção contra Gelo", descricao: "Liga aquecimento mínimo se temperatura < 2°.", nivel: "intermedio", tipo: "Temperatura", tempo: "6-8 min", slug: "protecao-gelo" },
+            { titulo: "Conforto Banho", descricao: "Aquece a casa de banho 15 minutos antes do banho.", nivel: "intermedio", tipo: "Temperatura", tempo: "5-8 min", slug: "conforto-banho" },
+            { titulo: "Modo Férias Clima", descricao: "Mantém temperatura entre 15-30°.", nivel: "intermedio", tipo: "Temperatura", tempo: "6-8 min", slug: "modo-ferias-clima" },
+            { titulo: "Poupança Energética", descricao: "Ajusta temperatura em horários de tarifa mais cara.", nivel: "avancado", tipo: "Temperatura", tempo: "8-10 min", slug: "poupanca-energetica" },
+            { titulo: "Alerta Janela Aberta", descricao: "Notificação se janela aberta com AC ligado.", nivel: "iniciante", tipo: "Temperatura", tempo: "3-5 min", slug: "alerta-janela-aberta" },
+            { titulo: "Temperatura Bebé", descricao: "Alerta se temperatura quarto bebé < 19° ou > 23°.", nivel: "iniciante", tipo: "Temperatura", tempo: "4-6 min", slug: "temperatura-bebe" },
+
+            // Humidade (6)
+            { titulo: "Desumidificador Automático", descricao: "Liga desumidificador quando humidade > 65%.", nivel: "iniciante", tipo: "Humidade", tempo: "4-6 min", slug: "desumidificador-automatico" },
+            { titulo: "Humidificador Quarto", descricao: "Mantém humidade entre 40-60% no quarto.", nivel: "iniciante", tipo: "Humidade", tempo: "4-6 min", slug: "humidificador-quarto" },
+            { titulo: "Humidificador Bebé", descricao: "Humidade ideal no quarto do bebé.", nivel: "intermedio", tipo: "Humidade", tempo: "5-8 min", slug: "humidificador-bebe" },
+            { titulo: "Alerta Humidade Elevada", descricao: "Notificação quando humidade > 70%.", nivel: "iniciante", tipo: "Humidade", tempo: "3-5 min", slug: "alerta-humidade-elevada" },
+            { titulo: "Ventilação Casa Banho", descricao: "Liga exaustor 20 minutos após banho.", nivel: "iniciante", tipo: "Humidade", tempo: "4-6 min", slug: "ventilacao-casa-banho" },
+            { titulo: "Proteção Livros", descricao: "Mantém humidade entre 45-55% em biblioteca.", nivel: "intermedio", tipo: "Humidade", tempo: "5-7 min", slug: "protecao-livros" },
+
+            // Qualidade Ar (6)
+            { titulo: "Purificador Automático", descricao: "Liga purificador quando CO2 > 1000ppm.", nivel: "intermedio", tipo: "Qualidade Ar", tempo: "5-8 min", slug: "purificador-automatico" },
+            { titulo: "Ventilação Cruzada", descricao: "Abre janelas opostas quando temperatura exterior é agradável.", nivel: "avancado", tipo: "Qualidade Ar", tempo: "8-10 min", slug: "ventilacao-cruzada" },
+            { titulo: "Cozinha sem Fumos", descricao: "Liga exaustor automaticamente quando deteta fumo.", nivel: "intermedio", tipo: "Qualidade Ar", tempo: "5-7 min", slug: "cozinha-sem-fumos" },
+            { titulo: "Alerta Má Qualidade Ar", descricao: "Notificação quando qualidade do ar está má.", nivel: "iniciante", tipo: "Qualidade Ar", tempo: "3-5 min", slug: "alerta-ma-qualidade-ar" },
+            { titulo: "Purificador por Horário", descricao: "Liga purificador durante a noite.", nivel: "iniciante", tipo: "Qualidade Ar", tempo: "3-5 min", slug: "purificador-horario" },
+            { titulo: "Ventilação CO2 Quarto", descricao: "Abre janela se CO2 > 1000ppm durante a noite.", nivel: "intermedio", tipo: "Qualidade Ar", tempo: "6-8 min", slug: "ventilacao-co2-quarto" },
+
+            // Estores (8)
+            { titulo: "Estores Automáticos Calor", descricao: "Fecha estores da fachada sul quando temperatura > 28°.", nivel: "intermedio", tipo: "Estores", tempo: "5-8 min", slug: "estores-automaticos-calor" },
+            { titulo: "Estores Automáticos Frio", descricao: "Abre estores sul no inverno para aquecimento solar.", nivel: "intermedio", tipo: "Estores", tempo: "5-8 min", slug: "estores-automaticos-frio" },
+            { titulo: "Abrir Estores Manhã", descricao: "Abre estores gradualmente de manhã.", nivel: "iniciante", tipo: "Estores", tempo: "4-6 min", slug: "abrir-estores-manha" },
+            { titulo: "Fechar Estores Noite", descricao: "Fecha estores ao pôr-do-sol.", nivel: "iniciante", tipo: "Estores", tempo: "4-6 min", slug: "fechar-estores-noite" },
+            { titulo: "Proteção Onda Calor", descricao: "Fecha todos os estores em dias de calor extremo.", nivel: "intermedio", tipo: "Estores", tempo: "5-7 min", slug: "protecao-onda-calor" },
+            { titulo: "Estores com Sol", descricao: "Acompanha a posição do sol.", nivel: "avancado", tipo: "Estores", tempo: "10-15 min", slug: "estores-com-sol" },
+            { titulo: "Modo Sesta", descricao: "Fecha estores para sesta de 1h.", nivel: "iniciante", tipo: "Estores", tempo: "4-6 min", slug: "modo-sesta" },
+            { titulo: "Estores Férias", descricao: "Abre/fecha estores para simular presença.", nivel: "intermedio", tipo: "Estores", tempo: "6-8 min", slug: "estores-ferias" }
+        ];
+
+        const ITEMS_POR_PAGINA = 9;
+        let paginaAtual = 1;
+        let automacoesFiltradas = [...automacoes];
+
+        // ===== FUNÇÕES DE MEMÓRIA =====
+        function guardarEstado() {
+            localStorage.setItem('clima_filtro_tipo', document.getElementById('filtro-tipo').value);
+            localStorage.setItem('clima_filtro_nivel', document.getElementById('filtro-nivel').value);
+            localStorage.setItem('clima_pagina', paginaAtual);
+        }
+
+        function recuperarEstado() {
+            const tipoSalvo = localStorage.getItem('clima_filtro_tipo');
+            const nivelSalvo = localStorage.getItem('clima_filtro_nivel');
+            const paginaSalva = localStorage.getItem('clima_pagina');
+            
+            if (tipoSalvo) document.getElementById('filtro-tipo').value = tipoSalvo;
+            if (nivelSalvo) document.getElementById('filtro-nivel').value = nivelSalvo;
+            if (paginaSalva) paginaAtual = parseInt(paginaSalva);
+        }
+
+        // ===== FUNÇÕES PRINCIPAIS =====
+        function carregarAutomacoes() {
+            const grid = document.getElementById('automacoes-grid');
+            grid.innerHTML = '';
+            
+            const tipoFiltro = document.getElementById('filtro-tipo').value;
+            const nivelFiltro = document.getElementById('filtro-nivel').value;
+            
+            automacoesFiltradas = automacoes.filter(auto => {
+                if (tipoFiltro !== 'todos' && auto.tipo !== tipoFiltro) return false;
+                if (nivelFiltro !== 'todos' && auto.nivel !== nivelFiltro) return false;
+                return true;
+            });
+
+            document.getElementById('total-count').textContent = `${automacoesFiltradas.length} automações disponíveis`;
+
+            const totalPaginas = Math.ceil(automacoesFiltradas.length / ITEMS_POR_PAGINA);
+            if (paginaAtual > totalPaginas && totalPaginas > 0) paginaAtual = totalPaginas;
+            
+            const inicio = (paginaAtual - 1) * ITEMS_POR_PAGINA;
+            const fim = inicio + ITEMS_POR_PAGINA;
+            const automacoesPagina = automacoesFiltradas.slice(inicio, fim);
+            
+            automacoesPagina.forEach(auto => {
+                const card = document.createElement('div');
+                card.className = 'automacao-card';
+                card.onclick = () => {
+                    guardarEstado();
+                    window.location.href = `../automacoes/clima/${auto.slug}.html`;
+                };
+                
+                card.innerHTML = `
+                    <div class="automacao-titulo">${auto.titulo}</div>
+                    <div class="automacao-descricao">${auto.descricao}</div>
+                    <div class="automacao-tags">
+                        <span class="tag ${auto.nivel}">${auto.nivel === 'iniciante' ? '⭐ Iniciante' : auto.nivel === 'intermedio' ? '⭐⭐ Intermédio' : '⭐⭐⭐ Avançado'}</span>
+                        <span class="tag">${auto.tipo}</span>
+                    </div>
+                    <div class="automacao-footer">
+                        <span class="tempo">⏱️ ${auto.tempo}</span>
+                        <button class="btn-favorito" onclick="event.stopPropagation(); alert('Adicionado aos favoritos!')">🤍</button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+
+            criarPaginacao(totalPaginas);
+            guardarEstado();
+        }
+
+        function criarPaginacao(totalPaginas) {
+            const paginacaoEl = document.getElementById('paginacao');
+            paginacaoEl.innerHTML = '';
+
+            if (totalPaginas <= 1) return;
+
+            const prevBtn = document.createElement('div');
+            prevBtn.className = 'pagina';
+            prevBtn.innerHTML = '←';
+            prevBtn.onclick = () => { if (paginaAtual > 1) { paginaAtual--; carregarAutomacoes(); } };
+            if (paginaAtual === 1) prevBtn.style.opacity = '0.3';
+            paginacaoEl.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btn = document.createElement('div');
+                btn.className = `pagina ${paginaAtual === i ? 'ativa' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => { paginaAtual = i; carregarAutomacoes(); };
+                paginacaoEl.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement('div');
+            nextBtn.className = 'pagina';
+            nextBtn.innerHTML = '→';
+            nextBtn.onclick = () => { if (paginaAtual < totalPaginas) { paginaAtual++; carregarAutomacoes(); } };
+            if (paginaAtual === totalPaginas) nextBtn.style.opacity = '0.3';
+            paginacaoEl.appendChild(nextBtn);
+        }
+
+        // Inicialização
+        recuperarEstado();
+        carregarAutomacoes();
+
+        document.getElementById('filtro-tipo').addEventListener('change', () => { paginaAtual = 1; carregarAutomacoes(); });
+        document.getElementById('filtro-nivel').addEventListener('change', () => { paginaAtual = 1; carregarAutomacoes(); });
+        window.addEventListener('beforeunload', guardarEstado);
+    </script>
+</body>
+</html>

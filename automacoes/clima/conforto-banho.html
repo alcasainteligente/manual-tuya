@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conforto Banho · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Conforto Banho</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Conforto Banho</h1>
+            <div class="automacao-meta">
+                <span class="badge intermedio">⭐⭐ Intermédio</span>
+                <span class="badge divisao">📍 Casa de Banho</span>
+                <span class="badge divisao">⏱️ 6 minutos</span>
+            </div>
+            <p class="automacao-descricao">Aquece a casa de banho 15 minutos antes do banho e aquece as toalhas. Sai do banho para um ambiente quentinho e toalhas macias.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🔥 Aquecedor inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para casa de banho</span>
+                </li>
+                <li>
+                    <strong>🧺 Toalheiro elétrico inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para aquecer toalhas</span>
+                </li>
+                <li>
+                    <strong>🌡️ Sensor de temperatura (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para monitorizar</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para configuração</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> Certifica-te que os equipamentos são próprios para casas de banho (proteção IP adequada).</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Instalar os equipamentos</h4>
+                <p>Coloca o aquecedor num local seguro, longe da água.</p>
+                <p>Instala o toalheiro elétrico (se não for fixo, usa uma tomada inteligente).</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Adicionar dispositivos ao app</h4>
+                <p>Adiciona o aquecedor e o toalheiro ao app SmartLife.</p>
+                <p>Dá nomes: "Aquecedor Casa Banho", "Toalheiro".</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar automação por horário</h4>
+                <p>Vai a <strong>"Automation"</strong> → <strong>"+"</strong>.</p>
+                <p><strong>IF:</strong> "Timing" → Hora do banho (ex: 07:00 para banho matinal, 21:00 para noturno)</p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>Aquecedor Casa Banho = ON, temperatura 24°C</li>
+                        <li>Toalheiro = ON</li>
+                    </ul>
+                </p>
+                <p>Nome: <strong>"Preparar Banho"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar automação para desligar</h4>
+                <p><strong>IF:</strong> Delay 1 hora após ligar</p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>Aquecedor = OFF</li>
+                        <li>Toalheiro = OFF</li>
+                    </ul>
+                </p>
+                <p>Nome: <strong>"Fim Banho"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Versão com sensor de humidade (avançado)</h4>
+                <p>Se tiveres sensor de humidade:</p>
+                <p><strong>IF:</strong> Sensor Humidade > 70% (alguém a tomar banho)</p>
+                <p><strong>THEN:</strong> Manter aquecimento ligado por mais 30 minutos após o banho (para secar a casa de banho).</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Versão com botão físico</h4>
+                <p>Coloca um botão inteligente na casa de banho:</p>
+                <p><strong>IF:</strong> Botão = "Click único"</p>
+                <p><strong>THEN:</strong> Ativar cena "Preparar Banho"</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>👨‍👩‍👧 Variação 1: Múltiplos banhos</h3>
+                <p>Se várias pessoas tomam banho em sequência, programa o aquecimento para ficar ligado durante mais tempo (ex: 2 horas).</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Variação 2: Temperatura adaptativa</h3>
+                <p>No inverno, aquece a 26°C. No verão, podes desligar ou aquecer apenas a 22°C (para não passar frio ao sair do banho).</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🧺 Variação 3: Toalhas sempre quentes</h3>
+                <p>Se tiveres toalheiro programável, mantém as toalhas quentes durante todo o dia (gasta mais energia, mas é um luxo).</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>💨 Variação 4: Ventilação pós-banho</h3>
+                <p>Após o banho, liga o exaustor por 20 minutos para remover a humidade (evita bolor). Podes integrar na automação "Fim Banho".</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎵 Variação 5: Música ambiente</h3>
+                <p>Se tiveres um altifalante na casa de banho, toca música relaxante durante o banho.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Casa de banho não aquece a tempo</h3>
+                <p><strong>Solução:</strong> Aumenta o tempo de pré-aquecimento para 20-30 minutos. Depende da potência do aquecedor e do tamanho da divisão.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Toalheiro não aquece suficientemente</h3>
+                <p><strong>Solução:</strong> Alguns toalheiros demoram mais tempo. Liga 30-45 minutos antes do banho. Ou usa um modelo com temporizador.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Esqueço-me de desligar</h3>
+                <p><strong>Solução:</strong> A automação com delay resolve isso. Define 1-2 horas após o banho.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Banho fora do horário habitual</h3>
+                <p><strong>Solução:</strong> Usa o botão físico para ativar manualmente quando precisas.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="arrefecimento-noturno.html" class="relacionada-card">
+                    Arrefecimento Noturno
+                    <span>Para o quarto</span>
+                </a>
+                <a href="aquecimento-zonado.html" class="relacionada-card">
+                    Aquecimento Zonado
+                    <span>Controlo geral</span>
+                </a>
+                <a href="../iluminacao/luz-espelho.html" class="relacionada-card">
+                    Luz do Espelho
+                    <span>Iluminação da casa de banho</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

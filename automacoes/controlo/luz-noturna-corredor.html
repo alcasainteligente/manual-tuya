@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luz Noturna Corredor · AL Casa Inteligente</title>
+    <style>
+        /* ===== MESMO CSS DAS AUTOMAÇÕES ANTERIORES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/controlo.html">🎮 Controlo</a> › 
+            <span>Luz Noturna Corredor</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Luz Noturna Corredor</h1>
+            <div class="automacao-meta">
+                <span class="badge iniciante">⭐ Iniciante</span>
+                <span class="badge divisao">🌙 Noite</span>
+                <span class="badge divisao">⏱️ 3-5 minutos</span>
+                <span class="badge divisao">🚶 Caminho seguro</span>
+            </div>
+            <p class="automacao-descricao">Uma luz suave no corredor acende automaticamente quando deteta movimento durante a noite, com intensidade baixa para não te deslumbrar. Perfeito para ir à casa de banho sem acordar completamente.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💡 Lâmpada inteligente regulável</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">No corredor</span>
+                </li>
+                <li>
+                    <strong>🚶 Sensor de movimento</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">No corredor</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para configuração</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Configurar sensor de movimento</h4>
+                <p>Coloca o sensor de movimento no corredor, virado para a zona de passagem.</p>
+                <p>Adiciona o sensor ao app SmartLife.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar automação noturna</h4>
+                <p><strong>IF:</strong> "Device" → "Sensor Movimento Corredor" → "Movimento detetado"</p>
+                <p><strong>AND:</strong> "Timing" → Entre 23:00 e 07:00 (período noturno)</p>
+                <p><strong>THEN:</strong> "Luz Corredor" = ON, 10% (luz suave)</p>
+                <p>Nome: <strong>"Luz Noturna Corredor"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Desligar após uso</h4>
+                <p><strong>THEN:</strong> "Delay" → 2 minutos</p>
+                <p><strong>THEN:</strong> "Luz Corredor" = OFF</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Versão com luminosidade ambiente</h4>
+                <p>Se o sensor tiver sensor de luz integrado:</p>
+                <p><strong>AND:</strong> "Sensor" → "Luminosidade" < 50 (escuro)</p>
+                <p>Só acende se estiver realmente escuro.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Versão com cor adequada</h4>
+                <p>Usa luz vermelha ou laranja muito suave (1-2%). Estas cores não interferem com o ritmo circadiano.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Caminho para a casa de banho</h4>
+                <p>Podes estender a automação:</p>
+                <ul>
+                    <li>Quando movimento no corredor → acende luz do corredor</li>
+                    <li>Quando movimento na casa de banho → acende luz da casa de banho (10%)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>🚽 Variação 1: Caminho completo</h3>
+                <p>Cria uma sequência:</p>
+                <ul>
+                    <li>Sensor quarto → acende luz corredor</li>
+                    <li>Sensor corredor → acende luz casa de banho</li>
+                    <li>Sensor casa de banho → mantém luz acesa enquanto estiveres lá</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>👶 Variação 2: Para crianças</h3>
+                <p>Se as crianças têm medo do escuro, mantém uma luz noturna fixa a 5% no corredor durante toda a noite.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌙 Variação 3: Intensidade variável</h3>
+                <p>Define intensidades diferentes conforme a hora:</p>
+                <ul>
+                    <li><strong>Início da noite (23h-02h):</strong> 15% (mais luz, sono menos profundo)</li>
+                    <li><strong>Meio da noite (02h-06h):</strong> 5% (sono profundo, não incomodar)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🔴 Variação 4: Luz vermelha</h3>
+                <p>A luz vermelha não inibe a produção de melatonina. Se as tuas lâmpadas suportarem RGB, usa vermelho a 5%.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Variação 5: Modo visitas</h3>
+                <p>Se tens visitas, podes desativar a automação ou aumentar a intensidade (30%) para elas se orientarem.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Luz acende com o gato a passar</h3>
+                <p><strong>Solução:</strong> Ajusta a sensibilidade do sensor ou a altura de instalação (mais alto deteta menos animais pequenos).</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Luz muito forte, acorda-te completamente</h3>
+                <p><strong>Solução:</strong> Reduz para 5% ou usa luz vermelha. O ideal é mal conseguires ver o caminho.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Sensor não deteta movimento (ângulo morto)</h3>
+                <p><strong>Solução:</strong> Reajusta a posição do sensor. O ângulo ideal é 30-45°.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Luz apaga enquanto ainda estás no corredor</h3>
+                <p><strong>Solução:</strong> Aumenta o delay para 3-4 minutos ou usa sensor de movimento na casa de banho para manter o caminho iluminado.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="modo-boa-noite.html" class="relacionada-card">
+                    Modo Boa Noite
+                    <span>Ativa a casa para dormir</span>
+                </a>
+                <a href="preparar-quarto.html" class="relacionada-card">
+                    Preparar Quarto
+                    <span>Ambiente para dormir</span>
+                </a>
+                <a href="../iluminacao/luz-noturna.html" class="relacionada-card">
+                    Luz Noturna (Iluminação)
+                    <span>Versão iluminação</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/energia.html">Energia</a>
+                    <a href="../../categorias/controlo.html">Controlo</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

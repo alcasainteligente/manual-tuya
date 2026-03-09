@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrumar o Quarto · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .badge.crianca {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .importante-box {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .codigo-box {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #22d3ee;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/familia.html">👶 Família</a> › 
+            <span>Arrumar o Quarto</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Arrumar o Quarto</h1>
+            <div class="automacao-meta">
+                <span class="badge iniciante">⭐ Iniciante</span>
+                <span class="badge crianca">🧒 Crianças</span>
+                <span class="badge divisao">⏱️ 4-6 minutos</span>
+            </div>
+            <p class="automacao-descricao">Transforma a tarefa de arrumar o quarto num jogo divertido. Com luzes e sons, as crianças são motivadas a arrumar e recebem uma recompensa quando terminam.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💡 Lâmpada inteligente RGB</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">No quarto da criança</span>
+                </li>
+                <li>
+                    <strong>🔊 Altifalante inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para música e mensagens</span>
+                </li>
+                <li>
+                    <strong>🔘 Botão inteligente (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para marcar tarefa concluída</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">No telemóvel</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="importante-box">
+            <h2>🎮 Gamificação das tarefas</h2>
+            <p style="color: #9ca3af; margin-top: 8px;">Crianças respondem melhor a desafios e recompensas. Esta automação transforma "arrumar o quarto" numa missão com níveis, conquistas e recompensas.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Criar cena "Missão: Arrumar o Quarto"</h4>
+                <p>Vai a "Smart" → "Scene" → "+" e cria uma cena com nome "Missão Arrumar":</p>
+                <ul>
+                    <li>Ação 1: Lâmpada → "Ligar" com cor azul (cor da missão)</li>
+                    <li>Ação 2: Altifalante → "Tocar música de aventura" (tema de missão)</li>
+                    <li>Ação 3: Notificação para os pais: "👧 Missão iniciada! A criança vai arrumar o quarto."</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar checkpoints</h4>
+                <p>Divide a arrumação em fases com feedback visual:</p>
+                <ul>
+                    <li><strong>Fase 1 (roupa no cesto):</strong> Luz muda para amarelo</li>
+                    <li><strong>Fase 2 (brinquedos arrumados):</strong> Luz muda para laranja</li>
+                    <li><strong>Fase 3 (cama feita):</strong> Luz muda para verde</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar sistema de confirmação</h4>
+                <p>Para a criança marcar que completou uma fase:</p>
+                <ul>
+                    <li><strong>Com botão:</strong> Cada toque no botão avança uma fase</li>
+                    <li><strong>Por voz:</strong> "OK Google, fase 1 completa" (via IFTTT)</li>
+                    <li><strong>Por sensor:</strong> Sensor na cama confirma se está feita</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar cena "Missão Cumprida"</h4>
+                <p>Quando todas as fases estão completas:</p>
+                <ul>
+                    <li>Lâmpada → pisca em arco-íris (festa!)</li>
+                    <li>Altifalante → toca música de vitória</li>
+                    <li>Mensagem: "🎉 Parabéns! Missão cumprida! Ganhaste 10 pontos."</li>
+                    <li>Notificação para os pais: "✅ Quarto arrumado!"</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Integrar com quadro de recompensas</h4>
+                <p>Combina com "Quadro de Tarefas":</p>
+                <ul>
+                    <li>Cada missão cumprida adiciona pontos numa planilha</li>
+                    <li>Atingindo X pontos, a criança pode trocar por tempo extra de ecrã, um brinquedo, etc.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>⏱️ Temporizador visível</h3>
+                <p>Adiciona um temporizador: "Tens 20 minutos para completar a missão". A luz muda de cor conforme o tempo passa (verde → amarelo → vermelho).</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>👥 Modo cooperativo</h3>
+                <p>Se forem dois irmãos a arrumar o mesmo quarto, podem ter missões diferentes. Quando ambos terminam, a festa é em dobro.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🏆 Conquistas especiais</h3>
+                <p>Cria conquistas raras:</p>
+                <ul>
+                    <li>"Arrumação relâmpago" (menos de 10 min) → luz dourada</li>
+                    <li>"Arrumação perfeita" (sem ajuda) → luz roxa</li>
+                    <li>"Maratona" (arrumar durante 7 dias seguidos) → luz especial</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>📸 Prova fotográfica</h3>
+                <p>Adiciona uma câmara inteligente que tira uma foto do quarto arrumado para comprovação. A foto pode ser partilhada no grupo da família.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Criança marca fases sem ter arrumado</h3>
+                <p><strong>Solução:</strong> Usa sensores para confirmar:</p>
+                <ul>
+                    <li>Sensor no cesto da roupa confirma se há roupa lá dentro</li>
+                    <li>Sensor na cama confirma se está feita</li>
+                    <li>Sensor nos brinquedos confirma se estão na caixa</li>
+                </ul>
+            </div>
+
+            <div class="problema-box">
+                <h3>Perde interesse após alguns dias</h3>
+                <p><strong>Solução:</strong> Muda as músicas e cores regularmente. Cria missões especiais surpresa com recompensas maiores.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Irmãos discutem sobre quem faz o quê</h3>
+                <p><strong>Solução:</strong> Cria missões individuais. Cada um tem a sua fase. A missão só é cumprida quando ambos terminam as suas partes.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="quadro-de-tarefas.html" class="relacionada-card">
+                    Quadro de Tarefas
+                    <span>Sistema de recompensas</span>
+                </a>
+                <a href="limite-tempo-ecras.html" class="relacionada-card">
+                    Limite Ecrãs
+                    <span>Recompensa com tempo de ecrã</span>
+                </a>
+                <a href="rotina-levantar-criancas.html" class="relacionada-card">
+                    Rotina Manhã
+                    <span>Fazer a cama</span>
+                </a>
+                <a href="../ifttt/registo-planilha.html" class="relacionada-card">
+                    Registo em Planilha
+                    <span>Pontuação</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                    <a href="../../categorias/familia.html">Família</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

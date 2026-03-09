@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarde de Jogos · AL Casa Inteligente</title>
+    <style>
+        /* ===== MESMO CSS DAS AUTOMAÇÕES ANTERIORES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/controlo.html">🎮 Controlo</a> › 
+            <span>Tarde de Jogos</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Tarde de Jogos</h1>
+            <div class="automacao-meta">
+                <span class="badge iniciante">⭐ Iniciante</span>
+                <span class="badge divisao">🎉 Fim de Semana</span>
+                <span class="badge divisao">⏱️ 3-5 minutos</span>
+                <span class="badge divisao">🎲 Diversão garantida</span>
+            </div>
+            <p class="automacao-descricao">Prepara a sala para uma tarde de jogos em família ou com amigos: luz forte (para ver bem), música animada, mesa preparada e lembretes para snacks. Diversão garantida!</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💡 Lâmpadas inteligentes</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Na sala</span>
+                </li>
+                <li>
+                    <strong>🎵 Coluna inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para música animada</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para criar a cena</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Criar a Cena "Tarde de Jogos"</h4>
+                <p>Vai a <strong>"Smart"</strong> → <strong>"Scenes"</strong> → <strong>"+"</strong>.</p>
+                <p>Escolhe <strong>"Launch Tap"</strong> (manual) para ativar quando os jogos começarem.</p>
+                <p>Nome: <strong>"🎲 Tarde de Jogos"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Preparar iluminação</h4>
+                <p><strong>THEN:</strong></p>
+                <ul>
+                    <li><strong>Luz da sala:</strong> ON, 80%, luz branca fria (4000K) - ver bem os jogos</li>
+                    <li><strong>Candeeiro de mesa:</strong> ON, 60% (iluminação extra)</li>
+                    <li><strong>Luzes RGB (opcional):</strong> Cores divertidas a mudar lentamente</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Música ambiente</h4>
+                <ul>
+                    <li><strong>Coluna:</strong> Tocar playlist "Tarde de Jogos"</li>
+                    <li>Sugestões: Música animada, pop, rock, videogame music</li>
+                    <li>Volume: 40% (ambiente, mas permite conversar)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Preparar a mesa</h4>
+                <ul>
+                    <li><strong>Notificação:</strong> "Vamos preparar a mesa para os jogos! Tapetes, cartas, dados?"</li>
+                    <li>Se tiveres mesa extensível, podes ter um aviso para a estender</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Snacks e bebidas</h4>
+                <ul>
+                    <li><strong>Notificação 1:</strong> "Preparar pipocas ou snacks?"</li>
+                    <li><strong>Notificação 2:</strong> "Garantir bebidas frescas no frigorífico."</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Escolher o jogo</h4>
+                <ul>
+                    <li><strong>Sugestão:</strong> "Hoje que tal Monopólio? Ou Uno? Ou jogos de cartas?"</li>
+                    <li>Podes integrar com um calendário para sugerir jogos diferentes a cada semana</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 7: Início da diversão</h4>
+                <ul>
+                    <li><strong>Mensagem final:</strong> "Tudo pronto! Que comecem os jogos! 🎲"</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>🎮 Variação 1: Tarde de videojogos</h3>
+                <p>Para jogos de consola/PC:</p>
+                <ul>
+                    <li>Luz mais baixa (30%) para ver o ecrã</li>
+                    <li>Luz RGB colorida atrás da TV (efeito ambiente)</li>
+                    <li>Música dos jogos</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>👨‍👩‍👧 Variação 2: Jogos em família</h3>
+                <p>Para todas as idades:</p>
+                <ul>
+                    <li>Luz forte (100%) para crianças verem bem</li>
+                    <li>Música infantil animada</li>
+                    <li>Snacks saudáveis (sugestão: fruta, iogurtes)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🏆 Variação 3: Torneio</h3>
+                <p>Se vais fazer um torneio:</p>
+                <ul>
+                    <li>Criar uma tabela de pontuação num ecrã</li>
+                    <li>Música de estádio nos momentos importantes</li>
+                    <li>Prémio para o vencedor (ex: escolhe o filme da noite)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>📊 Variação 4: Estatísticas de jogos</h3>
+                <p>Regista quem ganhou mais vezes e cria um ranking familiar.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎉 Variação 5: Noite de jogos temática</h3>
+                <p>Cria temas diferentes:</p>
+                <ul>
+                    <li><strong>Anos 80:</strong> Música dos anos 80, jogos clássicos</li>
+                    <li><strong>Hipster:</strong> Jogos de tabuleiro modernos, cerveja artesanal</li>
+                    <li><strong>Infantil:</strong> Jogos simples, cores vibrantes</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Luz muito forte ofusca o ecrã (jogos de vídeo)</h3>
+                <p><strong>Solução:</strong> Cria uma versão específica para videojogos com luz mais baixa.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Música muito alta para conversar</h3>
+                <p><strong>Solução:</strong> Reduz o volume para 20% ou desliga a música quando os jogos começam.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Faltam snacks ou bebidas</h3>
+                <p><strong>Solução:</strong> Integra com uma lista de compras. Se não tiveres, a notificação pode sugerir encomendar.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Não sabes que jogos jogar</h3>
+                <p><strong>Solução:</strong> Cria uma roleta virtual com os jogos que tens e deixa a sorte decidir.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="almoco-familia.html" class="relacionada-card">
+                    Almoço em Família
+                    <span>Antes dos jogos</span>
+                </a>
+                <a href="preparar-semana.html" class="relacionada-card">
+                    Preparar Semana
+                    <span>Próxima</span>
+                </a>
+                <a href="modo-cinema-rotina.html" class="relacionada-card">
+                    Modo Cinema
+                    <span>Para depois dos jogos</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/energia.html">Energia</a>
+                    <a href="../../categorias/controlo.html">Controlo</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

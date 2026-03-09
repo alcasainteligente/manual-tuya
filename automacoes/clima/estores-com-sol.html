@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estores com Sol · AL Casa Inteligente</title>
+    <style>
+        /* ===== MESMO CSS DAS AUTOMAÇÕES ANTERIORES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Estores com Sol</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Estores com Sol</h1>
+            <div class="automacao-meta">
+                <span class="badge avancado">⭐⭐⭐ Avançado</span>
+                <span class="badge divisao">🪟 Todas as divisões</span>
+                <span class="badge divisao">⏱️ 10-15 minutos</span>
+                <span class="badge divisao">☀️ Acompanha o sol</span>
+            </div>
+            <p class="automacao-descricao">Os estores ajustam-se automaticamente ao longo do dia conforme a posição do sol. Máximo aproveitamento da luz natural, mínimo aquecimento solar. A casa inteligente no seu melhor.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🪟 Motorização para estores</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Agrupados por fachada</span>
+                </li>
+                <li>
+                    <strong>☀️ Sensor de luminosidade exterior</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Mínimo 2 (fachadas diferentes)</span>
+                </li>
+                <li>
+                    <strong>🧭 Bússola digital (telemóvel)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para orientar as fachadas</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife + Excel/Notas</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para mapear horários</span>
+                </li>
+                <li>
+                    <strong>⏰ Múltiplas automações</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">8-12 automações diferentes</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Mapear a casa (o mais importante)</h4>
+                <p>Com uma bússola no telemóvel, determina a orientação de cada divisão:</p>
+                <ul>
+                    <li><strong>Fachada Nascente:</strong> Sol da manhã (06h-12h)</li>
+                    <li><strong>Fachada Sul:</strong> Sol todo o dia (mais intenso 10h-16h)</li>
+                    <li><strong>Fachada Poente:</strong> Sol da tarde (14h-20h) - o mais quente!</li>
+                    <li><strong>Fachada Norte:</strong> Pouco ou nenhum sol direto</li>
+                </ul>
+                <p>Cria grupos no app: "Estores Nascente", "Estores Sul", "Estores Poente", "Estores Norte".</p>
+                <div class="nota">
+                    <strong>Nota:</strong> Em Portugal, a fachada Sul recebe sol praticamente o dia todo. A Poente é a mais problemática no verão.
+                </div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar tabela de horários (exemplo para verão)</h4>
+                <p><strong>Fachada Nascente:</strong></p>
+                <ul>
+                    <li>06:00 - Abrir 100% (aproveitar nascer do sol)</li>
+                    <li>10:00 - Fechar 50% (sol começa a aquecer)</li>
+                    <li>12:00 - Fechar 100% (sol forte)</li>
+                </ul>
+                <p><strong>Fachada Sul:</strong></p>
+                <ul>
+                    <li>08:00 - Abrir 100% (luz natural)</li>
+                    <li>11:00 - Fechar 50% (proteção parcial)</li>
+                    <li>14:00 - Fechar 100% (hora de maior calor)</li>
+                    <li>18:00 - Abrir 50% (sol mais fraco)</li>
+                </ul>
+                <p><strong>Fachada Poente:</strong></p>
+                <ul>
+                    <li>08:00 - Abrir 100% (sem sol direto)</li>
+                    <li>14:00 - Fechar 50% (começa o sol)</li>
+                    <li>16:00 - Fechar 100% (sol forte da tarde)</li>
+                    <li>20:00 - Abrir 50% (pôr-do-sol)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar automações no app</h4>
+                <p>Para cada horário definido, cria uma automação:</p>
+                <p><strong>IF:</strong> "Timing" → "Repeat" → Todos os dias às 10:00</p>
+                <p><strong>THEN:</strong> "Device Control" → Grupo "Estores Nascente" = Fechar 50%</p>
+                <p>Nome: <strong>"Sol - Nascente 10h 50%"</strong></p>
+                <p>Repete para cada horário de cada fachada.</p>
+                <p><strong>Total de automações:</strong> 8 a 12 dependendo do detalhe.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Versão com sensor de luminosidade (automática)</h4>
+                <p>Em vez de horários fixos, usa sensores de luz:</p>
+                <p><strong>Fachada Nascente com sensor:</strong></p>
+                <p><strong>IF:</strong> "Device" → "Sensor Luz Nascente" → Lux "Above" → 5000 (sol forte)</p>
+                <p><strong>THEN:</strong> "Estores Nascente" = Fechar 75%</p>
+                
+                <p><strong>IF:</strong> "Device" → "Sensor Luz Nascente" → Lux "Above" → 10000 (sol muito forte)</p>
+                <p><strong>THEN:</strong> "Estores Nascente" = Fechar 100%</p>
+                
+                <p><strong>IF:</strong> "Device" → "Sensor Luz Nascente" → Lux "Below" → 2000 (nublado/sombra)</p>
+                <p><strong>THEN:</strong> "Estores Nascente" = Abrir 100%</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Versão com temperatura (ajuste fino)</h4>
+                <p>Combina a posição do sol com a temperatura real:</p>
+                <p><strong>IF:</strong> Horário 14:00-16:00 (sol na fachada poente)</p>
+                <p><strong>AND:</strong> Temperatura exterior > 28°C</p>
+                <p><strong>THEN:</strong> Fechar estores poente 100%</p>
+                
+                <p><strong>IF:</strong> Horário 14:00-16:00 (sol na fachada poente)</p>
+                <p><strong>AND:</strong> Temperatura exterior < 25°C (dia ameno)</p>
+                <p><strong>THEN:</strong> Manter estores abertos para luz natural</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar perfis sazonais</h4>
+                <p>O sol muda de posição conforme a estação:</p>
+                <p><strong>Perfil Verão (Junho-Setembro):</strong> Proteção máxima, fachada sul fecha mais cedo</p>
+                <p><strong>Perfil Inverno (Outubro-Março):</strong> Aproveitar sol para aquecimento, manter estores abertos</p>
+                <p><strong>Perfil Primavera/Outono:</strong> Equilíbrio entre luz e temperatura</p>
+                <p>Podes ativar/desativar grupos de automações conforme a estação.</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>🏡 Variação 1: Casas com árvores ou vizinhos</h3>
+                <p>Se tens árvores ou prédios que tapam o sol em certas horas, ajusta os horários:</p>
+                <ul>
+                    <li>Fachada sul tapada por árvore das 14h-16h → nesses dias, mantém estores abertos</li>
+                    <li>Usa sensor de luz para detetar sombra real em vez de horário fixo</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🔄 Variação 2: Abertura gradual ao longo do dia</h3>
+                <p>Em vez de passos fixos (0%, 50%, 100%), podes fazer ajustes mais suaves:</p>
+                <ul>
+                    <li>08:00 - 100%</li>
+                    <li>09:00 - 90%</li>
+                    <li>10:00 - 75%</li>
+                    <li>11:00 - 50%</li>
+                    <li>12:00 - 25%</li>
+                    <li>13:00 - 0%</li>
+                </ul>
+                <p>Isto exige muitas automações, mas o efeito é muito natural.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Variação 3: Controlo manual rápido</h3>
+                <p>Cria cenas no telemóvel para situações específicas:</p>
+                <ul>
+                    <li>"Sol Forte" → Fecha estores sul e poente a 100%</li>
+                    <li>"Dia Nublado" → Abre todos os estores</li>
+                    <li>"Tarde de Sol" → Fecha apenas poente</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Variação 4: Proteção para móveis e soalho</h3>
+                <p>O sol direto descolora móveis e soalho. Cria proteção extra:</p>
+                <ul>
+                    <li>Divisões com móveis de madeira: fechar sempre que sol incida diretamente</li>
+                    <li>Usa película UV nos vidros + estores fechados nas horas críticas</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>☀️ Variação 5: Aproveitar sol no inverno</h3>
+                <p>No inverno, o sol é amigo. Inverte a lógica:</p>
+                <ul>
+                    <li><strong>Verão:</strong> Fechar quando há sol</li>
+                    <li><strong>Inverno:</strong> Abrir quando há sol (aquecimento gratuito)</li>
+                </ul>
+                <p>Mantém os estores abertos mesmo nas horas de sol, a menos que a temperatura interior já esteja confortável.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🤖 Variação 6: Integração com previsão meteorológica</h3>
+                <p>Usa a previsão para decidir a estratégia:</p>
+                <ul>
+                    <li><strong>Previsão de dia muito quente:</strong> Fecha mais cedo e mantém fechado</li>
+                    <li><strong>Previsão de dia ameno:</strong> Abre mais tempo para luz natural</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Muitas automações, difícil de gerir</h3>
+                <p><strong>Causa:</strong> Criaste 12+ automações manuais.</p>
+                <p><strong>Solução:</strong> Usa sensores de luz para reduzir o número de automações. Em vez de 6 horários, tens 2-3 triggers por limiar de luz.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Estores abrem e fecham com nuvens passageiras</h3>
+                <p><strong>Causa:</strong> Sensor de luz reage a nuvens rápidas.</p>
+                <p><strong>Solução:</strong> Adiciona um temporizador de atraso (delay) de 10-15 minutos antes de agir. Assim só reage a mudanças duradouras.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Não sei a orientação da minha casa</h3>
+                <p><strong>Solução:</strong> Observa durante um dia:</p>
+                <ul>
+                    <li>Que janelas têm sol de manhã? → Nascente</li>
+                    <li>Que janelas têm sol à tarde? → Poente</li>
+                    <li>Que janelas têm sol o dia todo? → Sul</li>
+                    <li>Que janelas nunca têm sol direto? → Norte</li>
+                </ul>
+            </div>
+
+            <div class="problema-box">
+                <h3>Mudança de estação, automações desatualizadas</h3>
+                <p><strong>Causa:</strong> Usaste horários fixos que não acompanham o nascer/por do sol.</p>
+                <p><strong>Solução:</strong> Usa triggers "Sunrise" e "Sunset" combinados com offsets (ex: 2h após nascer do sol). Ou cria perfis sazonais que ativas manualmente.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Fachada sul muito quente mesmo com estores fechados</h3>
+                <p><strong>Causa:</strong> O calor acumula entre o vidro e o estore.</p>
+                <p><strong>Solução:</strong> Usa estores com lâminas reguláveis (tipo persiana) para permitir circulação de ar, ou instala película de controlo solar nos vidros.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Os estores fecham mas queres ver a paisagem</h3>
+                <p><strong>Solução:</strong> Fecha apenas a parte inferior dos estores (se forem tipo romano ou com separação) ou usa cortinas duplas (uma opaca e uma transparente).</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Acumulação de calor durante o dia</h3>
+                <p><strong>Solução:</strong> Mesmo com estores fechados, o calor pode acumular. Combina com:</p>
+                <ul>
+                    <li>Ventilação noturna para arrefecer a casa</li>
+                    <li>Tintas refletivas no exterior</li>
+                    <li>Estores pelo lado de fora (recomendado para fachada sul)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="estores-automaticos-calor.html" class="relacionada-card">
+                    Estores Automáticos Calor
+                    <span>Versão simples</span>
+                </a>
+                <a href="protecao-onda-calor.html" class="relacionada-card">
+                    Proteção Onda Calor
+                    <span>Para dias extremos</span>
+                </a>
+                <a href="abrir-estores-manha.html" class="relacionada-card">
+                    Abrir Estores Manhã
+                    <span>Despertar natural</span>
+                </a>
+                <a href="fechar-estores-noite.html" class="relacionada-card">
+                    Fechar Estores Noite
+                    <span>Privacidade</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

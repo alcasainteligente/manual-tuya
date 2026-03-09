@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventilação CO2 Quarto · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Ventilação CO2 Quarto</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Ventilação CO2 Quarto</h1>
+            <div class="automacao-meta">
+                <span class="badge intermedio">⭐⭐ Intermédio</span>
+                <span class="badge divisao">📍 Quarto</span>
+                <span class="badge divisao">⏱️ 6 minutos</span>
+            </div>
+            <p class="automacao-descricao">Monitoriza os níveis de CO2 no quarto durante a noite e abre a janela automaticamente quando os níveis ficam demasiado altos. Garante um sono reparador com ar fresco e oxigenado.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💨 Sensor de CO2</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Com medição de CO2 em ppm</span>
+                </li>
+                <li>
+                    <strong>🪟 Atuador para janela</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para abrir/fechar automaticamente</span>
+                </li>
+                <li>
+                    <strong>🌡️ Sensor de temperatura (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para evitar abrir com muito frio</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para configuração</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> Níveis de CO2 acima de 1000 ppm causam sonolência e dores de cabeça. Acima de 2000 ppm afetam a concentração e a qualidade do sono.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Instalar sensor de CO2 no quarto</h4>
+                <p>Coloca o sensor de CO2 na mesa de cabeceira ou numa parede próxima da cama, a cerca de 1,5m do chão.</p>
+                <p>Evita colocá-lo perto de janelas ou portas para leituras corretas.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Instalar atuador na janela</h4>
+                <p>Instala o atuador na janela do quarto. Deve permitir a abertura parcial (ex: 30%) para ventilação sem corrente de ar excessiva.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Adicionar dispositivos ao app</h4>
+                <p>Adiciona o sensor e o atuador ao app SmartLife.</p>
+                <p>Dá nomes: "Sensor CO2 Quarto", "Atuador Janela Quarto".</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar automação para abrir janela (CO2 alto)</h4>
+                <p>Vai a <strong>"Automation"</strong> → <strong>"+"</strong>.</p>
+                <p><strong>IF:</strong> 
+                    <ul>
+                        <li>Sensor CO2 > 1200 ppm</li>
+                        <li>AND: Horário entre 22:00 e 08:00 (durante a noite)</li>
+                        <li>AND: Temperatura Exterior > 12°C (para não passar demasiado frio)</li>
+                    </ul>
+                </p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>Atuador Janela Quarto = Abrir (30%)</li>
+                        <li>Notificação: "🌬️ CO2 elevado no quarto. Janela aberta para ventilação."</li>
+                    </ul>
+                </p>
+                <p>Nome: <strong>"Ventilação CO2 ON"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar automação para fechar janela</h4>
+                <p><strong>IF:</strong> 
+                    <ul>
+                        <li>Sensor CO2 < 800 ppm (já baixou)</li>
+                        <li>OU: Horário > 08:00 (já é de dia)</li>
+                    </ul>
+                </p>
+                <p><strong>THEN:</strong> Atuador Janela Quarto = Fechar</p>
+                <p>Nome: <strong>"Ventilação CO2 OFF"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar automação para segurança (chuva/frio extremo)</h4>
+                <p><strong>IF:</strong> Sensor Chuva = "Chuva" OU Temperatura Exterior < 5°C</p>
+                <p><strong>THEN:</strong> Fechar janela (prioridade máxima)</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>🌡️ Variação 1: Ventilação programada</h3>
+                <p>Em vez de abrir só quando o CO2 está alto, podes programar a janela para abrir 15 minutos a cada 2 horas durante a noite, garantindo renovação constante do ar.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>❄️ Variação 2: Inverno rigoroso</h3>
+                <p>No inverno, em vez de abrir a janela, podes ligar um sistema de ventilação mecânica com recuperação de calor, se tiveres.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>👶 Variação 3: Quarto de bebé</h3>
+                <p>Para bebés, o limiar deve ser mais baixo: abre a janela a 1000 ppm. Bebés são mais sensíveis a CO2 elevado.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📊 Variação 4: Registo de CO2</h3>
+                <p>Com IFTTT, regista os níveis de CO2 ao longo da noite para perceberes a qualidade do sono.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🔇 Variação 5: Modo silencioso</h3>
+                <p>Se o atuador for barulhento, programa para abrir apenas uma vez durante a noite (ex: às 3h) em vez de abrir e fechar várias vezes.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Janela abre e fecha várias vezes durante a noite</h3>
+                <p><strong>Solução:</strong> Aumenta a margem. Abre a 1200 ppm, fecha a 900 ppm. Isto evita ciclos muito curtos.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Acordo com frio porque a janela abriu</h3>
+                <p><strong>Solução:</strong> Aumenta a temperatura mínima para 15°C ou programa para abrir apenas 10% em vez de 30%.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>CO2 nunca baixa mesmo com janela aberta</h3>
+                <p><strong>Solução:</strong> A abertura pode ser insuficiente. Experimenta abrir 50% ou, se possível, duas janelas em lados opostos para criar corrente.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Sensor de CO2 descalibrado</h3>
+                <p><strong>Solução:</strong> Sensores de CO2 precisam de calibração periódica. Geralmente, basta deixar ao ar livre (400 ppm) por algumas horas e reiniciar.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="ventilacao-cruzada.html" class="relacionada-card">
+                    Ventilação Cruzada
+                    <span>Para toda a casa</span>
+                </a>
+                <a href="alerta-ma-qualidade-ar.html" class="relacionada-card">
+                    Alerta Qualidade Ar
+                    <span>Monitorização</span>
+                </a>
+                <a href="purificador-automatico.html" class="relacionada-card">
+                    Purificador Automático
+                    <span>Alternativa</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                    <a href="#" onclick="alert('Em breve')">Termos</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

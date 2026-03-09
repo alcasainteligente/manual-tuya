@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlo · AL Casa Inteligente</title>
+    <style>
+        /* === MESMO CSS DAS OUTRAS CATEGORIAS === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .categoria-header {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .categoria-header h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .categoria-header p {
+            color: #9ca3af;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .categoria-header .count {
+            color: #22d3ee;
+            font-size: 16px;
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .filtros {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .filtros-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filtro-grupo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filtro-grupo label {
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .filtro-grupo select {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filtro-grupo select option {
+            background: #030712;
+            color: #ffffff;
+        }
+
+        .automacoes-lista {
+            padding: 20px 0 40px;
+        }
+
+        .automacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .automacao-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .automacao-card:hover {
+            border-color: rgba(34, 211, 238, 0.3);
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .automacao-titulo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .automacao-descricao {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .automacao-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .tag.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .tag.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .tag.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .automacao-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        .tempo {
+            color: #9ca3af;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-favorito {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .btn-favorito:hover {
+            color: #f97316;
+        }
+
+        .paginacao {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .pagina {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: #9ca3af;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagina:hover {
+            border-color: #22d3ee;
+            color: #ffffff;
+        }
+
+        .pagina.ativa {
+            background: #22d3ee;
+            color: #030712;
+            border-color: #22d3ee;
+        }
+
+        .pagina.ativa:hover {
+            background: #7dd3fc;
+        }
+
+        .pagina.next {
+            width: auto;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .categoria-header h2 {
+                font-size: 32px;
+            }
+            .filtros-grid {
+                flex-direction: column;
+            }
+            .filtro-grupo {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="../index.html">Início</a> › <span>🎮 Controlo</span>
+        </div>
+    </div>
+
+    <div class="categoria-header">
+        <div class="container">
+            <h2>🎮 Controlo</h2>
+            <p>Cria rotinas completas para que a casa se adapte automaticamente ao teu dia</p>
+            <div class="count" id="total-count">30 automações disponíveis</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filtros">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label>Período:</label>
+                    <select id="filtro-periodo">
+                        <option value="todos">Todos</option>
+                        <option value="Manhã">🌅 Manhã</option>
+                        <option value="Tarde">☀️ Tarde</option>
+                        <option value="Noite">🌙 Noite</option>
+                        <option value="Fim de Semana">🎉 Fim de Semana</option>
+                        <option value="Férias">🏖️ Férias</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label>Nível:</label>
+                    <select id="filtro-nivel">
+                        <option value="todos">Todos</option>
+                        <option value="iniciante">⭐ Iniciante</option>
+                        <option value="intermedio">⭐⭐ Intermédio</option>
+                        <option value="avancado">⭐⭐⭐ Avançado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <section class="automacoes-lista">
+            <div class="automacoes-grid" id="automacoes-grid"></div>
+            <div class="paginacao" id="paginacao"></div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="iluminacao.html">Iluminação</a>
+                    <a href="seguranca.html">Segurança</a>
+                    <a href="clima.html">Clima</a>
+                    <a href="eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lista de automações de Controlo/Rotinas
+        const automacoes = [
+            // MANHÃ (7)
+            { titulo: "Rotina Acordar", descricao: "Abre estores gradualmente, acende luz suave e liga música ambiente.", nivel: "intermedio", periodo: "Manhã", tempo: "5-8 min", slug: "rotina-acordar" },
+            { titulo: "Despertar Suave", descricao: "Luz do quarto aumenta 0-100% em 30 minutos.", nivel: "intermedio", periodo: "Manhã", tempo: "5-7 min", slug: "despertar-suave-rotina" },
+            { titulo: "Café ao Acordar", descricao: "Máquina de café liga 5 minutos antes do despertador.", nivel: "iniciante", periodo: "Manhã", tempo: "4-6 min", slug: "cafe-ao-acordar-rotina" },
+            { titulo: "Notícias do Dia", descricao: "Toca rádio com notícias enquanto te vestes.", nivel: "iniciante", periodo: "Manhã", tempo: "3-5 min", slug: "noticias-do-dia" },
+            { titulo: "Clima do Dia", descricao: "Anuncia a previsão do tempo e sugere levar guarda-chuva.", nivel: "iniciante", periodo: "Manhã", tempo: "4-6 min", slug: "clima-do-dia" },
+            { titulo: "Saída para Trabalho", descricao: "Verifica portas fechadas, desliga luzes e ativa alarme.", nivel: "intermedio", periodo: "Manhã", tempo: "5-7 min", slug: "saida-para-trabalho" },
+            { titulo: "Preparar Crianças Escola", descricao: "Acende luz do quarto das crianças e avisa 'Hora de levantar'.", nivel: "iniciante", periodo: "Manhã", tempo: "4-6 min", slug: "preparar-criancas-escola" },
+
+            // TARDE (5)
+            { titulo: "Almoço em Casa", descricao: "Ajusta luz da sala e toca música ambiente para almoço.", nivel: "iniciante", periodo: "Tarde", tempo: "3-5 min", slug: "almoco-em-casa" },
+            { titulo: "Sesta de Fim de Semana", descricao: "Fecha estores e ajusta temperatura para sesta de 1h.", nivel: "intermedio", periodo: "Tarde", tempo: "5-7 min", slug: "sesta-fim-semana" },
+            { titulo: "Hora dos Trabalhos de Casa", descricao: "Acende luz da secretária e bloqueia distrações por 45 min.", nivel: "intermedio", periodo: "Tarde", tempo: "5-7 min", slug: "hora-trabalhos-casa" },
+            { titulo: "Lanche das Crianças", descricao: "Aviso sonoro 'Hora do lanche' e prepara mesa.", nivel: "iniciante", periodo: "Tarde", tempo: "3-5 min", slug: "lanche-criancas" },
+            { titulo: "Música Ambiente Tarde", descricao: "Toca música suave durante a tarde.", nivel: "iniciante", periodo: "Tarde", tempo: "3-5 min", slug: "musica-ambiente-tarde" },
+
+            // NOITE (7)
+            { titulo: "Rotina Jantar", descricao: "Ajusta luz da sala/cozinha para tom quente e toca música suave.", nivel: "iniciante", periodo: "Noite", tempo: "4-6 min", slug: "rotina-jantar" },
+            { titulo: "Modo Cinema", descricao: "Fecha estores, luzes a 5% e liga TV/projetor.", nivel: "intermedio", periodo: "Noite", tempo: "5-8 min", slug: "modo-cinema-rotina" },
+            { titulo: "Hora do Banho Crianças", descricao: "Aquece toalhas e acende luz da casa de banho.", nivel: "iniciante", periodo: "Noite", tempo: "4-6 min", slug: "hora-banho-criancas" },
+            { titulo: "História para Dormir", descricao: "Toca áudio de história durante 15 min e apaga luz gradualmente.", nivel: "intermedio", periodo: "Noite", tempo: "5-7 min", slug: "historia-dormir" },
+            { titulo: "Preparar Quarto", descricao: "Ajusta AC para 20°, fecha estores e acende luz de leitura.", nivel: "iniciante", periodo: "Noite", tempo: "4-6 min", slug: "preparar-quarto" },
+            { titulo: "Modo Boa Noite", descricao: "Verifica portas, ativa alarme e desliga todas as luzes.", nivel: "intermedio", periodo: "Noite", tempo: "5-7 min", slug: "modo-boa-noite" },
+            { titulo: "Luz Noturna Corredor", descricao: "Acende luz suave no corredor para ir à casa de banho.", nivel: "iniciante", periodo: "Noite", tempo: "3-5 min", slug: "luz-noturna-corredor" },
+
+            // FIM DE SEMANA (6)
+            { titulo: "Acordar Tarde (Sábado)", descricao: "Despertador mais tarde, luz gradual mais lenta.", nivel: "iniciante", periodo: "Fim de Semana", tempo: "4-6 min", slug: "acordar-tarde-sabado" },
+            { titulo: "Pequeno-Almoço Especial", descricao: "Música animada, luz festiva e panquecas.", nivel: "intermedio", periodo: "Fim de Semana", tempo: "5-7 min", slug: "pequeno-almoco-especial" },
+            { titulo: "Limpeza da Casa", descricao: "Aspirador robô liga, música animada, luzes a 100%.", nivel: "intermedio", periodo: "Fim de Semana", tempo: "5-8 min", slug: "limpeza-casa" },
+            { titulo: "Almoço em Família", descricao: "Prepara mesa, luz quente e música ambiente.", nivel: "iniciante", periodo: "Fim de Semana", tempo: "4-6 min", slug: "almoco-familia" },
+            { titulo: "Tarde de Jogos", descricao: "Luz da sala a 80%, prepara mesa para jogos.", nivel: "iniciante", periodo: "Fim de Semana", tempo: "3-5 min", slug: "tarde-jogos" },
+            { titulo: "Preparar Semana", descricao: "Lista de tarefas, verificar agendas, preparar roupa.", nivel: "avancado", periodo: "Fim de Semana", tempo: "6-8 min", slug: "preparar-semana" },
+
+            // FÉRIAS (5)
+            { titulo: "Modo Férias Ativo", descricao: "Simula presença com luzes em padrões aleatórios.", nivel: "avancado", periodo: "Férias", tempo: "8-10 min", slug: "modo-ferias-ativo" },
+            { titulo: "Fecho Total", descricao: "Desliga tudo exceto frigorífico e alarme.", nivel: "intermedio", periodo: "Férias", tempo: "5-7 min", slug: "fecho-total" },
+            { titulo: "Monitorização Férias", descricao: "Fotos diárias da casa e alerta de anomalias.", nivel: "avancado", periodo: "Férias", tempo: "8-12 min", slug: "monitorizacao-ferias" },
+            { titulo: "Regresso a Casa", descricao: "Pré-arrefece/aquece casa e liga luzes antes de chegar.", nivel: "intermedio", periodo: "Férias", tempo: "6-8 min", slug: "regresso-casa" },
+            { titulo: "Alerta Geofencing", descricao: "Ativa modo férias automaticamente quando sais do país.", nivel: "avancado", periodo: "Férias", tempo: "7-9 min", slug: "alerta-geofencing" }
+        ];
+
+        const ITEMS_POR_PAGINA = 9;
+        let paginaAtual = 1;
+        let automacoesFiltradas = [...automacoes];
+
+        // ===== FUNÇÕES DE MEMÓRIA =====
+        function guardarEstado() {
+            localStorage.setItem('controlo_filtro_periodo', document.getElementById('filtro-periodo').value);
+            localStorage.setItem('controlo_filtro_nivel', document.getElementById('filtro-nivel').value);
+            localStorage.setItem('controlo_pagina', paginaAtual);
+        }
+
+        function recuperarEstado() {
+            const periodoSavo = localStorage.getItem('controlo_filtro_periodo');
+            const nivelSalvo = localStorage.getItem('controlo_filtro_nivel');
+            const paginaSalva = localStorage.getItem('controlo_pagina');
+            
+            if (periodoSavo) document.getElementById('filtro-periodo').value = periodoSavo;
+            if (nivelSalvo) document.getElementById('filtro-nivel').value = nivelSalvo;
+            if (paginaSalva) paginaAtual = parseInt(paginaSalva);
+        }
+
+        // ===== FUNÇÕES PRINCIPAIS =====
+        function carregarAutomacoes() {
+            const grid = document.getElementById('automacoes-grid');
+            grid.innerHTML = '';
+            
+            const periodoFiltro = document.getElementById('filtro-periodo').value;
+            const nivelFiltro = document.getElementById('filtro-nivel').value;
+            
+            automacoesFiltradas = automacoes.filter(auto => {
+                if (periodoFiltro !== 'todos' && auto.periodo !== periodoFiltro) return false;
+                if (nivelFiltro !== 'todos' && auto.nivel !== nivelFiltro) return false;
+                return true;
+            });
+
+            document.getElementById('total-count').textContent = `${automacoesFiltradas.length} automações disponíveis`;
+
+            const totalPaginas = Math.ceil(automacoesFiltradas.length / ITEMS_POR_PAGINA);
+            if (paginaAtual > totalPaginas && totalPaginas > 0) paginaAtual = totalPaginas;
+            
+            const inicio = (paginaAtual - 1) * ITEMS_POR_PAGINA;
+            const fim = inicio + ITEMS_POR_PAGINA;
+            const automacoesPagina = automacoesFiltradas.slice(inicio, fim);
+            
+            automacoesPagina.forEach(auto => {
+                const card = document.createElement('div');
+                card.className = 'automacao-card';
+                card.onclick = () => {
+                    guardarEstado();
+                    window.location.href = `../automacoes/controlo/${auto.slug}.html`;
+                };
+                
+                card.innerHTML = `
+                    <div class="automacao-titulo">${auto.titulo}</div>
+                    <div class="automacao-descricao">${auto.descricao}</div>
+                    <div class="automacao-tags">
+                        <span class="tag ${auto.nivel}">${auto.nivel === 'iniciante' ? '⭐ Iniciante' : auto.nivel === 'intermedio' ? '⭐⭐ Intermédio' : '⭐⭐⭐ Avançado'}</span>
+                        <span class="tag">${auto.periodo}</span>
+                    </div>
+                    <div class="automacao-footer">
+                        <span class="tempo">⏱️ ${auto.tempo}</span>
+                        <button class="btn-favorito" onclick="event.stopPropagation(); alert('Adicionado aos favoritos!')">🤍</button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+
+            criarPaginacao(totalPaginas);
+            guardarEstado();
+        }
+
+        function criarPaginacao(totalPaginas) {
+            const paginacaoEl = document.getElementById('paginacao');
+            paginacaoEl.innerHTML = '';
+
+            if (totalPaginas <= 1) return;
+
+            const prevBtn = document.createElement('div');
+            prevBtn.className = 'pagina';
+            prevBtn.innerHTML = '←';
+            prevBtn.onclick = () => { if (paginaAtual > 1) { paginaAtual--; carregarAutomacoes(); } };
+            if (paginaAtual === 1) prevBtn.style.opacity = '0.3';
+            paginacaoEl.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btn = document.createElement('div');
+                btn.className = `pagina ${paginaAtual === i ? 'ativa' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => { paginaAtual = i; carregarAutomacoes(); };
+                paginacaoEl.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement('div');
+            nextBtn.className = 'pagina';
+            nextBtn.innerHTML = '→';
+            nextBtn.onclick = () => { if (paginaAtual < totalPaginas) { paginaAtual++; carregarAutomacoes(); } };
+            if (paginaAtual === totalPaginas) nextBtn.style.opacity = '0.3';
+            paginacaoEl.appendChild(nextBtn);
+        }
+
+        // Inicialização
+        recuperarEstado();
+        carregarAutomacoes();
+
+        document.getElementById('filtro-periodo').addEventListener('change', () => { paginaAtual = 1; carregarAutomacoes(); });
+        document.getElementById('filtro-nivel').addEventListener('change', () => { paginaAtual = 1; carregarAutomacoes(); });
+        window.addEventListener('beforeunload', guardarEstado);
+    </script>
+</body>
+</html>

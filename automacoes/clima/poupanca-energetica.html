@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poupança Energética · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Poupança Energética</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Poupança Energética</h1>
+            <div class="automacao-meta">
+                <span class="badge avancado">⭐⭐⭐ Avançado</span>
+                <span class="badge divisao">📍 Toda a casa</span>
+                <span class="badge divisao">⏱️ 10 minutos</span>
+            </div>
+            <p class="automacao-descricao">Ajusta a temperatura do AC/aquecimento para usar mais intensamente nos horários de tarifa mais barata, reduzindo o consumo nas horas mais caras. Pode reduzir a conta de eletricidade em 20-30%.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🌡️ AC ou aquecimento inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Compatível com Tuya</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para configuração</span>
+                </li>
+                <li>
+                    <strong>📊 Conhecimento do tarifário</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Horas cheias/vazio</span>
+                </li>
+                <li>
+                    <strong>🔌 Tomadas inteligentes (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para outros equipamentos</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> Em Portugal, a tarifa bi-horária tem horas de vazio (mais barato) e horas cheias (mais caro). Geralmente, vazio: 22h-8h dias úteis e todo o fim de semana.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Identificar os horários do teu tarifário</h4>
+                <p>Consulta a tua fatura de eletricidade para saber os horários de vazio e cheia.</p>
+                <p>Exemplo típico em Portugal continental:</p>
+                <ul>
+                    <li><strong>Horas vazio (mais barato):</strong> 22h-8h dias úteis + fim de semana todo</li>
+                    <li><strong>Horas cheias (mais caro):</strong> 8h-22h dias úteis</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar automação para horas vazio (conforto máximo)</h4>
+                <p>Vai a <strong>"Automation"</strong> → <strong>"+"</strong>.</p>
+                <p><strong>IF:</strong> 
+                    <ul>
+                        <li>"Timing" → "Repeat" → Dias úteis, das 22:00 às 08:00</li>
+                        <li>E todo o fim de semana</li>
+                    </ul>
+                </p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>AC = ON, temperatura 21°C (inverno) / 23°C (verão) - temperatura de conforto</li>
+                    </ul>
+                </p>
+                <p>Nome: <strong>"Modo Conforto Horas Vazio"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar automação para horas cheias (poupança)</h4>
+                <p><strong>IF:</strong> 
+                    <ul>
+                        <li>"Timing" → "Repeat" → Dias úteis, das 08:00 às 22:00</li>
+                    </ul>
+                </p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>AC = ON, temperatura 19°C (inverno) / 25°C (verão) - 2°C abaixo/acima do conforto para poupar</li>
+                    </ul>
+                </p>
+                <p>Nome: <strong>"Modo Poupança Horas Cheias"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar automação para desligar quando não há ninguém</h4>
+                <p>Para poupança máxima, combina com sensor de presença:</p>
+                <p><strong>IF:</strong> Sensor Movimento = "Sem movimento" por 30 minutos</p>
+                <p><strong>AND:</strong> Horário entre 08:00 e 22:00</p>
+                <p><strong>THEN:</strong> AC = OFF</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar automação para tomadas (opcional)</h4>
+                <p>Podes aplicar o mesmo princípio a outros equipamentos:</p>
+                <p><strong>IF:</strong> Horário vazio</p>
+                <p><strong>THEN:</strong> 
+                    <ul>
+                        <li>Ligar máquina de lavar roupa (se tiveres programação)</li>
+                        <li>Ligar esquentador elétrico</li>
+                        <li>Ligar carregador de carro elétrico</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Versão com sensor de temperatura exterior</h4>
+                <p>Para maior eficiência, podes ajustar a temperatura conforme a temperatura exterior:</p>
+                <ul>
+                    <li>Se exterior < 10°C: aquecimento a 21°C nas horas vazio, 19°C nas horas cheias</li>
+                    <li>Se exterior entre 10-20°C: aquecimento a 19°C nas horas vazio, 17°C nas horas cheias</li>
+                    <li>Se exterior > 20°C: desligar aquecimento</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 7: Criar resumo de poupança (opcional)</h4>
+                <p>Com IFTTT, podes registar o consumo e calcular a poupança estimada.</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>📊 Variação 1: Tarifário tri-horário</h3>
+                <p>Alguns tarifários têm três períodos: ponta, cheia e vazio. Ajusta as automações conforme:</p>
+                <ul>
+                    <li><strong>Ponta (mais caro):</strong> 18h-22h - temperatura 18°C (inverno) / 26°C (verão)</li>
+                    <li><strong>Cheia:</strong> 8h-18h - temperatura 19°C / 25°C</li>
+                    <li><strong>Vazio (mais barato):</strong> 22h-8h + fins de semana - temperatura 21°C / 23°C</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🔋 Variação 2: Painéis solares</h3>
+                <p>Se tiveres painéis solares, programa os equipamentos para funcionar durante as horas de produção (dia).</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Variação 3: Notificação de poupança</h3>
+                <p>Recebe um relatório mensal com a estimativa de poupança: "Este mês poupaste 15€ com as automações de clima."</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🏠 Variação 4: Zonas diferentes</h3>
+                <p>Podes ter temperaturas diferentes em divisões diferentes, conforme o uso:</p>
+                <ul>
+                    <li>Sala: temperatura de conforto durante o dia</li>
+                    <li>Quartos: temperatura mais baixa durante o dia, conforto à noite</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Variação 5: Pré-aquecimento/arrefecimento</h3>
+                <p>Antes da hora de ponta (mais cara), podes pré-aquecer/arrefecer a casa para que o sistema possa desligar durante as horas caras.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Mudança de hora (inverno/verão)</h3>
+                <p><strong>Solução:</strong> As automações baseadas em horas fixas precisam de ser ajustadas quando muda a hora. O SmartLife não ajusta automaticamente para o horário de verão/inverno. Terás de atualizar manualmente.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Tarifário diferente ao fim de semana</h3>
+                <p><strong>Solução:</strong> Cria automações separadas para dias úteis e fim de semana. No fim de semana, como é tudo vazio, podes ter conforto todo o dia.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>AC não atinge a temperatura desejada nas horas vazio</h3>
+                <p><strong>Solução:</strong> Podes precisar de ligar o AC mais cedo. Ex: em vez de ligar às 22h, liga às 21h30 para que às 22h já esteja à temperatura desejada.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Muitas automações, confusão</h3>
+                <p><strong>Solução:</strong> Cria cenas "Inverno" e "Verão" que ativam as automações corretas para cada estação.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Esquecer de mudar entre inverno/verão</h3>
+                <p><strong>Solução:</strong> Podes usar a temperatura exterior como gatilho. Se temperatura exterior > 20°C durante 3 dias consecutivos, muda para modo verão.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="aquecimento-zonado.html" class="relacionada-card">
+                    Aquecimento Zonado
+                    <span>Poupança por zonas</span>
+                </a>
+                <a href="modo-ferias-clima.html" class="relacionada-card">
+                    Modo Férias Clima
+                    <span>Poupança durante ausências</span>
+                </a>
+                <a href="../energia/tarifario-dinamico.html" class="relacionada-card">
+                    Tarifário Dinâmico
+                    <span>Para tarifários ainda mais complexos</span>
+                </a>
+                <a href="../energia/tomadas-ausencia.html" class="relacionada-card">
+                    Tomadas Ausência
+                    <span>Desligar equipamentos</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

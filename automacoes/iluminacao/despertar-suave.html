@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despertar Suave · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        /* Cabeçalho da Automação */
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        /* Secções */
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/iluminacao.html">💡 Iluminação</a> › 
+            <span>Despertar Suave</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Despertar Suave</h1>
+            <div class="automacao-meta">
+                <span class="badge intermedio">⭐⭐ Intermédio</span>
+                <span class="badge divisao">📍 Quarto</span>
+                <span class="badge divisao">⏱️ 6 minutos</span>
+            </div>
+            <p class="automacao-descricao">A luz do quarto aumenta gradualmente de 0% a 100% ao longo de 20-30 minutos, simulando o nascer do sol. Acordar naturalmente, sem despertador agressivo.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💡 Lâmpada regulável</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">De teto ou cabeceira</span>
+                </li>
+                <li>
+                    <strong>💡 Candeeiro de cabeceira (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para efeito mais suave</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Com função gradual</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> É essencial que a lâmpada suporte regulação (dimmer). Lâmpadas normais só ligam/desligam, não permitem aumentos graduais.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Escolher a lâmpada certa</h4>
+                <p>Certifica-te que a lâmpada do quarto (ou candeeiro) é regulável e está configurada no app.</p>
+                <p>Dá-lhe um nome: <strong>"Luz Quarto"</strong> ou <strong>"Candeeiro Cabeceira"</strong>.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar automação para dias de semana</h4>
+                <p>Vai a <strong>"Automation"</strong> → <strong>"+"</strong>.</p>
+                <p><strong>IF:</strong></p>
+                <ul>
+                    <li>"Timing" → "Repeat"</li>
+                    <li>Seleciona: Segunda a Sexta</li>
+                    <li>Hora: <strong>06:30</strong> (ajusta conforme a tua hora de acordar)</li>
+                </ul>
+                <p><strong>THEN:</strong> "Device Control" → "Luz Quarto"</p>
+                <p>Agora a parte importante: em vez de ligar simplesmente, vamos usar a função gradual:</p>
+                <ul>
+                    <li>Procura a opção <strong>"Gradual"</strong> ou <strong>"Sunrise"</strong> (pode estar num separador próprio)</li>
+                    <li>Define: <strong>Duração: 20 minutos</strong></li>
+                    <li>Intensidade final: <strong>100%</strong></li>
+                    <li>Temperatura: <strong>2700K-3000K</strong> (luz quente para acordar suavemente)</li>
+                </ul>
+                <p>Nome: <strong>"Despertar Suave Semana"</strong></p>
+                <div class="nota">📌 Se não encontrares a opção gradual, podes simular com várias automações (ver dicas).</div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar automação para fim de semana</h4>
+                <p>Cria outra automação para acordar mais tarde:</p>
+                <ul>
+                    <li><strong>IF:</strong> Sábado e Domingo às <strong>09:00</strong></li>
+                    <li><strong>THEN:</strong> Mesma ação gradual, mas com duração de 30 minutos (mais relaxado)</li>
+                </ul>
+                <p>Nome: <strong>"Despertar Suave Fim Semana"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Versão alternativa com múltiplas automações</h4>
+                <p>Se a tua lâmpada não tiver função gradual, podes simular com várias automações:</p>
+                <ul>
+                    <li><strong>06:30</strong> → 20%</li>
+                    <li><strong>06:40</strong> → 40%</li>
+                    <li><strong>06:50</strong> → 60%</li>
+                    <li><strong>07:00</strong> → 80%</li>
+                    <li><strong>07:10</strong> → 100%</li>
+                </ul>
+                <p>Não é tão suave, mas funciona.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Adicionar música suave (opcional)</h4>
+                <p>No Alexa/Google, cria uma rotina para tocar música suave 5 minutos depois da luz começar:</p>
+                <ul>
+                    <li>"Tocar música" → "Relaxing Morning" ou "Piano Suave"</li>
+                    <li>Volume: 20% (a aumentar gradualmente também)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Testar</h4>
+                <p>Para testar sem esperar pela manhã, podes adiantar o relógio do telemóvel ou criar uma automação temporária para daqui a 5 minutos.</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas para um Despertar Perfeito</h2>
+            
+            <div class="dica-box">
+                <h3>⏱️ Duração ideal</h3>
+                <ul>
+                    <li><strong>15-20 minutos:</strong> Para dias de semana, quando tens pressa</li>
+                    <li><strong>25-30 minutos:</strong> Para fim de semana, mais relaxado</li>
+                    <li><strong>30-40 minutos:</strong> Para quem tem dificuldade em acordar</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Temperatura de cor</h3>
+                <ul>
+                    <li><strong>2700K (amarelo quente):</strong> Mais suave, ideal para acordar</li>
+                    <li><strong>3000K (branco quente):</strong> Bom para dias nublados</li>
+                    <li><strong>4000K (neutro):</strong> Para quem prefere acordar mais desperto</li>
+                </ul>
+                <p>Evita luz fria (>5000K) ao acordar - pode ser agressiva.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🛏️ Posição da luz</h3>
+                <p>O ideal é que a luz não incida diretamente nos olhos. Um candeeiro de cabeceira virado para a parede cria um reflexo suave. Luz de teto pode ser forte demais.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌅 Combinar com estores</h3>
+                <p>Se tiveres estores inteligentes, programa para abrirem 10% de cada vez durante o mesmo período. Simulas o nascer do sol real.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Despertador de reserva</h3>
+                <p>Mantém um despertador tradicional como backup, especialmente nos primeiros dias até te habituares a acordar com a luz.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Luz não aumenta gradualmente</h3>
+                <p><strong>Solução:</strong> Verifica se a lâmpada suporta regulação. Lâmpadas LED normais (não reguláveis) só ligam/desligam. Procura lâmpadas com símbolo de regulação (ícone de círculo com traço).</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Acordo antes da luz</h3>
+                <p><strong>Solução:</strong> Ajusta a hora de início para mais tarde. Se acordas sempre antes, a luz pode estar a começar muito cedo. Experimenta 10 minutos mais tarde.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Não acordo com a luz</h3>
+                <p><strong>Solução:</strong> Algumas pessoas precisam de mais estímulo. Combina com música suave ou aumenta a intensidade final para 100% mais rapidamente (10-15 minutos).</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Luz muito forte no final</h3>
+                <p><strong>Solução:</strong> Em vez de 100%, programa para 80% ou 70%. É suficiente para a maioria das pessoas e menos agressivo.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="luz-noturna-quarto.html" class="relacionada-card">
+                    Luz Noturna Quarto
+                    <span>Para a noite</span>
+                </a>
+                <a href="modo-dormir.html" class="relacionada-card">
+                    Modo Dormir
+                    <span>Para adormecer</span>
+                </a>
+                <a href="../rotinas/rotina-manha.html" class="relacionada-card">
+                    Rotina Manhã
+                    <span>Depois de acordar</span>
+                </a>
+                <a href="pequeno-almoco.html" class="relacionada-card">
+                    Pequeno-Almoço
+                    <span>Para a cozinha</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

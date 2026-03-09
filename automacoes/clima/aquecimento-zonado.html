@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquecimento Zonado · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Aquecimento Zonado</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Aquecimento Zonado</h1>
+            <div class="automacao-meta">
+                <span class="badge avancado">⭐⭐⭐ Avançado</span>
+                <span class="badge divisao">📍 Toda a casa</span>
+                <span class="badge divisao">⏱️ 10 minutos</span>
+            </div>
+            <p class="automacao-descricao">Aquece apenas as divisões ocupadas da casa, poupando energia. Sensores de movimento detetam onde estás e ligam o aquecimento só nesses locais. Ideal para famílias e para reduzir a fatura de energia.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🔌 Sensores de movimento</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Um por divisão (ou mais)</span>
+                </li>
+                <li>
+                    <strong>🌡️ Aquecedores inteligentes</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Ou termostatos por zona</span>
+                </li>
+                <li>
+                    <strong>🌡️ Sensores de temperatura</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para feedback e evitar sobreaquecimento</span>
+                </li>
+                <li>
+                    <strong>📡 Hub Zigbee (se necessário)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para sensores</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> Podes usar aquecedores a óleo, radiadores elétricos ou bombas de calor, desde que tenham controlo Tuya.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Mapear as divisões da casa</h4>
+                <p>Identifica as principais divisões que vais aquecer:</p>
+                <ul>
+                    <li>Sala</li>
+                    <li>Quarto principal</li>
+                    <li>Quartos das crianças</li>
+                    <li>Escritório</li>
+                    <li>Cozinha (pode não precisar, pois já aquece com eletrodomésticos)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Instalar sensores de movimento</h4>
+                <p>Coloca um sensor de movimento em cada divisão, apontado para a zona de passagem.</p>
+                <p>No quarto, evita apontar para a cama para não detetar movimento durante o sono.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Instalar sensores de temperatura</h4>
+                <p>Coloca um sensor de temperatura em cada divisão, longe de fontes de calor (aquecedores, janelas).</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar grupos por divisão</h4>
+                <p>Vai a <strong>"Smart"</strong> → <strong>"Create Group"</strong> e cria grupos:</p>
+                <ul>
+                    <li>"Aquecimento Sala" - aquecedor da sala + sensor temperatura sala</li>
+                    <li>"Aquecimento Quarto" - aquecedor do quarto + sensor temperatura quarto</li>
+                    <li>"Aquecimento Escritório" - etc.</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar automação para cada divisão (ligar)</h4>
+                <p>Vai a <strong>"Automation"</strong> → <strong>"+"</strong>.</p>
+                <p><strong>IF:</strong> 
+                    <ul>
+                        <li>Sensor Movimento Sala = "Movimento detetado"</li>
+                        <li>AND: Sensor Temperatura Sala < 19°C (temperatura desejada)</li>
+                    </ul>
+                </p>
+                <p><strong>THEN:</strong> Aquecimento Sala = ON, temperatura 21°C</p>
+                <p>Nome: <strong>"Aquecimento Sala ON"</strong></p>
+                <p>Repete para cada divisão.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar automação para desligar</h4>
+                <p><strong>IF:</strong> Sensor Movimento Sala = "Sem movimento" por 30 minutos</p>
+                <p><strong>THEN:</strong> Aquecimento Sala = OFF</p>
+                <p>Nome: <strong>"Aquecimento Sala OFF"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 7: Criar automação de temperatura máxima (segurança)</h4>
+                <p><strong>IF:</strong> Sensor Temperatura Sala > 23°C</p>
+                <p><strong>THEN:</strong> Aquecimento Sala = OFF (evitar sobreaquecimento)</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 8: Criar modo noturno (opcional)</h4>
+                <p>Durante a noite, podes querer aquecer apenas os quartos:</p>
+                <ul>
+                    <li>IF: Horário entre 23:00 e 07:00</li>
+                    <li>THEN: Desligar aquecimento da sala (mesmo com movimento)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>🏠 Variação 1: Prioridade de divisões</h3>
+                <p>Se o sistema de aquecimento não conseguir aquecer tudo ao mesmo tempo, define prioridades:</p>
+                <ul>
+                    <li>Sala tem prioridade máxima (onde a família se reúne)</li>
+                    <li>Quartos têm prioridade média</li>
+                    <li>Escritório tem prioridade baixa</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>👨‍👩‍👧 Variação 2: Deteção por pessoa</h3>
+                <p>Com pulseiras ou telemóveis, podes detetar quem está em cada divisão e ajustar a temperatura conforme a preferência de cada um.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>⏱️ Variação 3: Pré-aquecimento</h3>
+                <p>Se souberes que vais para uma divisão a uma certa hora (ex: escritório às 9h), programa para começar a aquecer 30 minutos antes.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📊 Variação 4: Poupança comprovada</h3>
+                <p>Estima-se que aquecimento zonado pode poupar 20-30% na fatura de energia. Cria um registo para comparar consumos.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Variação 5: Temperaturas diferentes por divisão</h3>
+                <p>Cada pessoa pode ter preferências diferentes:</p>
+                <ul>
+                    <li>Sala: 21°C</li>
+                    <li>Quarto principal: 19°C</li>
+                    <li>Quarto de bebé: 22°C</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Aquecedor não desliga quando sais da divisão</h3>
+                <p><strong>Solução:</strong> Ajusta o tempo de delay. 30 minutos pode ser muito se a divisão for usada por pouco tempo. Experimenta 15 minutos.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Sensor não deteta movimento (pessoa parada)</h3>
+                <p><strong>Solução:</strong> Sensores PIR detetam movimento, não presença. Se estiveres parado a ler ou a ver TV, o sensor pode não detetar. Usa um sensor de presença (microondas) ou combina com sensor de porta.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Divisão arrefece demasiado rápido</h3>
+                <p><strong>Solução:</strong> Se a divisão for mal isolada, o aquecimento pode não ser eficiente. Melhora o isolamento (janelas, portas) ou usa um aquecedor mais potente.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Múltiplas automações (uma por divisão) confusas</h3>
+                <p><strong>Solução:</strong> Cria uma cena "Gestão Aquecimento" que ativa todas as automações de uma vez. Assim é mais fácil ativar/desativar o sistema completo.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Crianças deixam o aquecimento ligado no quarto vazio</h3>
+                <p><strong>Solução:</strong> Reduz o tempo de delay para 5-10 minutos nos quartos das crianças. Ou usa um sensor de porta na entrada do quarto.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="clima-perfeito-acordar.html" class="relacionada-card">
+                    Clima Perfeito ao Acordar
+                    <span>Aquecimento matinal</span>
+                </a>
+                <a href="arrefecimento-noturno.html" class="relacionada-card">
+                    Arrefecimento Noturno
+                    <span>Para o verão</span>
+                </a>
+                <a href="poupanca-energetica.html" class="relacionada-card">
+                    Poupança Energética
+                    <span>Combinar com tarifário</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

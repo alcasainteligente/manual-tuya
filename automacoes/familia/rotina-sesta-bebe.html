@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotina Sesta Bebé · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .badge.bebe {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .importante-box {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .codigo-box {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #22d3ee;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/familia.html">👶 Família</a> › 
+            <span>Rotina Sesta Bebé</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Rotina Sesta Bebé</h1>
+            <div class="automacao-meta">
+                <span class="badge intermedio">⭐⭐ Intermédio</span>
+                <span class="badge bebe">🍼 Bebé</span>
+                <span class="badge divisao">⏱️ 5-7 minutos</span>
+            </div>
+            <p class="automacao-descricao">Cria o ambiente perfeito para a sesta do bebé: estores fecham, luz suave acende, som branco toca e a temperatura ajusta-se. Tudo com um toque ou automaticamente à hora da sesta.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🪟 Estores motorizados Tuya</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Ou tomada para estores</span>
+                </li>
+                <li>
+                    <strong>💡 Lâmpada inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">No quarto do bebé</span>
+                </li>
+                <li>
+                    <strong>🔊 Altifalante inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para som branco</span>
+                </li>
+                <li>
+                    <strong>🌡️ Sensor de temperatura</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Opcional</span>
+                </li>
+                <li>
+                    <strong>🔘 Botão inteligente (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para iniciar rotina manualmente</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="importante-box">
+            <h2>🌙 Benefícios de uma rotina consistente</h2>
+            <p style="color: #9ca3af; margin-top: 8px;">Bebés respondem bem a rotinas. Ao repetires os mesmos passos sempre antes da sesta, o bebé associa essas ações a "está na hora de dormir" e adormece mais facilmente.</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Criar cena "Sesta Bebé" no SmartLife</h4>
+                <p>Vai a "Smart" → "Scene" → "+" e cria uma cena com nome "Sesta Bebé":</p>
+                <ul>
+                    <li>Ação 1: Estores → "Fechar" (se tiveres estores motorizados)</li>
+                    <li>Ação 2: Lâmpada → "Ligar" com intensidade 5% (cor vermelha suave)</li>
+                    <li>Ação 3: Tomada do altifalante → "Ligar" (para tocar som branco)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Configurar som branco</h4>
+                <p>Para o som branco, tens duas opções:</p>
+                <ul>
+                    <li><strong>Altifalante Bluetooth:</strong> LIGA na tomada inteligente. O altifalante já deve estar configurado para tocar som branco ao ligar.</li>
+                    <li><strong>Alexa/Google:</strong> No IFTTT, podes enviar comando "Alexa, toca som branco"</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Configurar temperatura ideal</h4>
+                <p>Se tiveres sensor de temperatura e AC/aquecedor:</p>
+                <ul>
+                    <li>Na mesma cena, adiciona "Then" para ajustar termostato a 21°C</li>
+                    <li>Ou cria uma automação separada que verifica temperatura antes da sesta</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar trigger automático por horário</h4>
+                <p>Para ativar automaticamente à hora da sesta:</p>
+                <ul>
+                    <li>Vai a "Automation" → "Smart" → "+"</li>
+                    <li>If: "Schedule" → "Every day at 13:30" (ajusta conforme a rotina do bebé)</li>
+                    <li>Then: "Ativar cena" → "Sesta Bebé"</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar trigger manual com botão</h4>
+                <p>Para iniciares a sesta manualmente com um botão:</p>
+                <ul>
+                    <li>If: Botão inteligente → "Single click"</li>
+                    <li>Then: "Ativar cena" → "Sesta Bebé"</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar automação para acordar</h4>
+                <p>Para quando o bebé acorda:</p>
+                <ul>
+                    <li>Cria outra cena "Acordar Bebé"</li>
+                    <li>Ações: Abrir estores (50%), luz desliga, som desliga</li>
+                    <li>Podes ativar manualmente ou com sensor de movimento no berço</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>⏱️ Rotina gradual</h3>
+                <p>Em vez de tudo ao mesmo tempo, cria uma sequência:</p>
+                <ul>
+                    <li>Minuto 0: Estores fecham (50%) - sinal que a sesta está perto</li>
+                    <li>Minuto 5: Som branco começa baixinho</li>
+                    <li>Minuto 10: Estores fecham completamente, luz suave acende</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Notificação para os pais</h3>
+                <p>Adiciona uma notificação: "😴 Hora da sesta do bebé! Ambiente preparado." Útil se estiveres noutra divisão.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Ajuste conforme estação</h3>
+                <p>Podes criar cenas diferentes para verão e inverno:</p>
+                <ul>
+                    <li>Verão: Estores fecham + AC liga</li>
+                    <li>Inverno: Estores fecham + aquecedor liga</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎵 Diferentes sons para diferentes sestas</h3>
+                <p>Manhã: Som mais alegre (pássaros). Tarde: Som branco. Noite: Som de chuva suave.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Bebé acorda com o barulho dos estores</h3>
+                <p><strong>Solução:</strong> Fecha os estores antes de o bebé estar a dormir. Ou usa cortinas elétricas mais silenciosas.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Som branco não começa</h3>
+                <p><strong>Solução:</strong> Verifica se o altifalante está configurado para tocar automaticamente ao ligar. Podes precisar de um altifalante com memória.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Horário da sesta muda todos os dias</h3>
+                <p><strong>Solução:</strong> Em vez de horário fixo, usa um botão. Quando vês sinais de sono, carregas no botão e a rotina começa.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="monitor-bebe-inteligente.html" class="relacionada-card">
+                    Monitor Bebé
+                    <span>Vigilância durante sesta</span>
+                </a>
+                <a href="luz-noturna-bebe.html" class="relacionada-card">
+                    Luz Noturna
+                    <span>Para a noite</span>
+                </a>
+                <a href="temperatura-ideal-bebe.html" class="relacionada-card">
+                    Temperatura Ideal
+                    <span>Conforto térmico</span>
+                </a>
+                <a href="hora-dormir-criancas.html" class="relacionada-card">
+                    Hora de Dormir
+                    <span>Para crianças maiores</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                    <a href="../../categorias/familia.html">Família</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

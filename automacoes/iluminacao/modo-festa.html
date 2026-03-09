@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo Festa · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        /* Cabeçalho da Automação */
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        /* Secções */
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/iluminacao.html">💡 Iluminação</a> › 
+            <span>Modo Festa</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Modo Festa</h1>
+            <div class="automacao-meta">
+                <span class="badge avancado">⭐⭐⭐ Avançado</span>
+                <span class="badge divisao">📍 Sala / Exterior</span>
+                <span class="badge divisao">⏱️ 8 minutos</span>
+            </div>
+            <p class="automacao-descricao">Transforma a casa para uma festa: luzes coloridas dinâmicas, música animada, efeitos especiais e ambiente preparado para receber muita gente.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>💡 Lâmpadas RGB</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Várias, para efeitos coloridos</span>
+                </li>
+                <li>
+                    <strong>✨ Fitas LED RGB</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para paredes ou teto</span>
+                </li>
+                <li>
+                    <strong>🎵 Altifalante inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Com playlist animada</span>
+                </li>
+                <li>
+                    <strong>🎮 Botão inteligente</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para ativar modo festa</span>
+                </li>
+                <li>
+                    <strong>🔦 Lâmpada de efeitos (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Tipo disco ou stroboscópica</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Organizar as luzes por zonas</h4>
+                <p>Cria grupos para diferentes áreas:</p>
+                <ul>
+                    <li><strong>"Festa Principal"</strong> - luzes principais da sala</li>
+                    <li><strong>"Festa Paredes"</strong> - fitas LED nas paredes</li>
+                    <li><strong>"Festa Exterior"</strong> - varanda/jardim (se aplicável)</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar cena "Modo Festa"</h4>
+                <p>Vai a <strong>"Smart"</strong> → <strong>"Scenes"</strong> → <strong>"Create Scene"</strong>.</p>
+                <p>Dá o nome: <strong>"Modo Festa"</strong>.</p>
+                <p><strong>Ações da cena:</strong></p>
+                <ul>
+                    <li><strong>Festa Principal:</strong> ON, 80%, Efeito "Ciclo de Cores" (RGB cycle)</li>
+                    <li><strong>Festa Paredes:</strong> ON, 70%, Efeito "Rainbow"</li>
+                    <li><strong>Festa Exterior:</strong> ON, 100%, Cores alternadas</li>
+                    <li><strong>Luzes teto normais:</strong> OFF (muito fortes)</li>
+                    <li><strong>Estores:</strong> Fechar (para criar ambiente)</li>
+                </ul>
+                <p>Guarda a cena.</p>
+                <div class="nota">📌 O efeito "Ciclo de Cores" faz as luzes mudarem gradualmente entre todas as cores. Perfeito para festa.</div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar cena "Festa Intensa" (com stroboscópio)</h4>
+                <p>Para momentos de música mais animada:</p>
+                <ul>
+                    <li>Cria nova cena: "Festa Intensa"</li>
+                    <li>Usa efeitos mais rápidos (se disponíveis)</li>
+                    <li>Se tiveres lâmpada com efeito strobo, ativa</li>
+                    <li>Luzes a 100% com mudanças rápidas</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Integrar com música</h4>
+                <p>No Alexa (ou Google Home), cria uma rotina:</p>
+                <ul>
+                    <li>Vai a <strong>"Rotinas"</strong> → <strong>"+"</strong></li>
+                    <li>Nome: "Modo Festa"</li>
+                    <li>Quando: "Voz" → "Alexa, modo festa"</li>
+                    <li>Ações:
+                        <ul>
+                            <li>"Ligar cena Modo Festa" (do SmartLife)</li>
+                            <li>"Tocar música" → escolhe "Festa" ou "Dance Hits"</li>
+                            <li>"Ajustar volume" → 60% (música para dançar)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar cena "Festa Suave" (para conversar)</h4>
+                <p>Para momentos em que a música está mais calma:</p>
+                <ul>
+                    <li>Luzes a 50%</li>
+                    <li>Cores fixas (azul, roxo) em vez de ciclo</li>
+                    <li>Fitas LED em modo "respiração" lenta</li>
+                </ul>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Sincronizar com batida (avançado)</h4>
+                <p>Para sincronizar luzes com a música, precisas de IFTTT ou sistemas dedicados. Uma alternativa simples:</p>
+                <ul>
+                    <li>Cria várias cenas (Festa 1, Festa 2, Festa 3) com cores diferentes</li>
+                    <li>Ativa manualmente conforme o ritmo da música</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas para uma Festa Inesquecível</h2>
+            
+            <div class="dica-box">
+                <h3>🌈 Cores por momento</h3>
+                <ul>
+                    <li><strong>Início (chegada):</strong> Roxo e azul - ambiente misterioso</li>
+                    <li><strong>Aquecimento:</strong> Verde e amarelo - energia crescente</li>
+                    <li><strong>Pico da festa:</strong> Vermelho e laranja - máxima energia</li>
+                    <li><strong>Relaxamento:</strong> Rosa e azul claro - para desacelerar</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎵 Playlists para cada momento</h3>
+                <p>Cria playlists no Spotify:</p>
+                <ul>
+                    <li>"Festa Início" - chill out, lounge</li>
+                    <li>"Festa Dance" - eletrónica, pop animado</li>
+                    <li>"Festa Latina" - reggaeton, salsa</li>
+                    <li>"Festa Retro" - anos 80/90</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>✨ Efeitos especiais</h3>
+                <p>Se tiveres fitas LED compridas, podes criar efeitos como "perseguição" (chasing) ou "ondas". Algumas fitas Tuya têm estes efeitos nativos.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🪩 Bola de discoteca</h3>
+                <p>Se tiveres uma bola de discoteca, dirige um foco de luz para ela. Podes usar um spot inteligente programado para cores variadas.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🍸 Bar iluminado</h3>
+                <p>Cria uma zona de bar com fitas LED a 50% em tons de azul ou roxo. Fica muito moderno e convidativo.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>📸 Cabine de fotos</h3>
+                <p>Se tiveres uma zona para fotos, usa luzes brancas (4000K) a 100% para boa iluminação. Podes criar uma cena "Fotos" só para esse momento.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Luzes não sincronizam com a música</h3>
+                <p><strong>Solução:</strong> O SmartLife não tem sincronia nativa com música. Podes usar IFTTT com o serviço "Sound" ou comprar um microfone de som para algumas fitas. Ou faz manualmente, mudando de cena conforme a música.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Ciclo de cores muito rápido</h3>
+                <p><strong>Solução:</strong> Algumas lâmpadas têm velocidade ajustável. Procura nas definições do dispositivo a opção "Speed" e reduz para 30-40%.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Luzes muito fortes</h3>
+                <p><strong>Solução:</strong> 80-100% pode ser demasiado para uma festa. Experimenta 60-70% para evitar ofuscar os convidados. Mantém as luzes indiretas (paredes, teto) em vez de luzes diretas.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Wi-Fi não aguenta tantos dispositivos</h3>
+                <p><strong>Solução:</strong> Festas com muitas pessoas podem sobrecarregar o Wi-Fi. Se possível, usa dispositivos Zigbee (criam rede própria) em vez de Wi-Fi. Ou desliga alguns dispositivos menos importantes.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Vizinhos a reclamar</h3>
+                <p><strong>Solução:</strong> Cria uma cena "Festa Baixo Volume" com luzes a 40% e música mais suave para depois das 22h. Ou programa para fechar bem portas e janelas.</p>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="modo-convivio.html" class="relacionada-card">
+                    Modo Convívio
+                    <span>Para receber amigos</span>
+                </a>
+                <a href="jantar-romantico.html" class="relacionada-card">
+                    Jantar Romântico
+                    <span>Para antes da festa</span>
+                </a>
+                <a href="luz-com-tv.html" class="relacionada-card">
+                    Luz com TV
+                    <span>Para karaoke</span>
+                </a>
+                <a href="luz-exterior-portao.html" class="relacionada-card">
+                    Luz Exterior
+                    <span>Para festa no jardim</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

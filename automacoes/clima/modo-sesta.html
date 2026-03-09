@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo Sesta · AL Casa Inteligente</title>
+    <style>
+        /* ===== MESMO CSS DAS AUTOMAÇÕES ANTERIORES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › 
+            <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/clima.html">🌡️ Clima</a> › 
+            <span>Modo Sesta</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Modo Sesta</h1>
+            <div class="automacao-meta">
+                <span class="badge iniciante">⭐ Iniciante</span>
+                <span class="badge divisao">🪟 Quarto / Sala</span>
+                <span class="badge divisao">⏱️ 4-6 minutos</span>
+                <span class="badge divisao">😴 Sesta de 1h</span>
+            </div>
+            <p class="automacao-descricao">Ativa o "Modo Sesta" e os estores fecham automaticamente por 1 hora. Perfeito para sestas de fim de semana, bebés a dormir ou uma pausa durante o dia. Ao fim do tempo, reabrem sozinhos.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>🪟 Motorização para estores</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Quarto ou sala</span>
+                </li>
+                <li>
+                    <strong>📱 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para criar cenas</span>
+                </li>
+                <li>
+                    <strong>🔘 Botão inteligente (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para ativar fisicamente</span>
+                </li>
+                <li>
+                    <strong>📢 Comando de voz (opcional)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Google/Alexa/Siri</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo no App SmartLife</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Configurar os motores dos estores</h4>
+                <p>Adiciona os motores dos estores que queres para a sesta (normalmente quarto ou sala).</p>
+                <p>Dá nomes: "Estore Quarto", "Estore Sala".</p>
+                <p>Testa se abrem/fecham corretamente.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar uma Cena "Modo Sesta"</h4>
+                <p>Vai a <strong>"Smart"</strong> → <strong>"Scenes"</strong> → <strong>"+"</strong>.</p>
+                <p>Escolhe <strong>"Launch Tap"</strong> (para ativar manualmente).</p>
+                <p><strong>THEN:</strong> "Device Control" → "Estore Quarto" = Fechar 0%</p>
+                <p><strong>THEN:</strong> "Delay" → 60 minutos</p>
+                <p><strong>THEN:</strong> "Device Control" → "Estore Quarto" = Abrir 100%</p>
+                <p>Nome da cena: <strong>"😴 Modo Sesta 1h"</strong></p>
+                <div class="nota">
+                    <strong>Nota:</strong> O passo "Delay" é fundamental - é o que faz a sesta terminar automaticamente.
+                </div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Adicionar ações extra (opcional)</h4>
+                <p>Podes enriquecer a cena com mais ações:</p>
+                <ul>
+                    <li>Luzes do quarto: desligar ou colocar a 1%</li>
+                    <li>Ventilador: ligar a 50% (se tiver)</li>
+                    <li>Modo "Não incomodar" no telemóvel (via IFTTT)</li>
+                    <li>Notificação: "Sesta ativada por 1 hora"</li>
+                </ul>
+                <p>Adiciona estas ações antes do delay ou depois, conforme faça sentido.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Versão com horário programado (sesta automática)</h4>
+                <p>Se o bebé dorme sempre à mesma hora:</p>
+                <p><strong>IF:</strong> "Timing" → "Repeat" → Todos os dias às 14:00</p>
+                <p><strong>THEN:</strong> Fechar estores + Delay 1h + Abrir estores</p>
+                <p>Nome: <strong>"Sesta Automática Bebé"</strong></p>
+                <p>Podes ajustar a duração (1h30, 2h) conforme a idade.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Versão com sensor de movimento (para bebés)</h4>
+                <p><strong>IF:</strong> "Device" → "Sensor Movimento Quarto Bebé" → Deteta movimento (bebé acordou)</p>
+                <p><strong>THEN:</strong> Cancelar o delay pendente e abrir estores imediatamente</p>
+                <p>Isto garante que se o bebé acordar mais cedo, a sesta termina na hora certa.</p>
+                <div class="nota">
+                    <strong>Nota avançada:</strong> Precisas de usar a funcionalidade "Wait until" ou criar duas automações separadas com uma variável virtual.
+                </div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar atalhos rápidos</h4>
+                <p>No ecrã principal do SmartLife, adiciona o widget da cena "Modo Sesta".</p>
+                <p>No iPhone, podes adicionar à Siri: "Hey Siri, modo sesta".</p>
+                <p>No Google Home: "Ok Google, ativar modo sesta".</p>
+                <p>Se tiveres um botão inteligente (ex: SwitchBot), programa para ativar esta cena.</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas e Variações</h2>
+            
+            <div class="dica-box">
+                <h3>👶 Variação 1: Sesta do bebé com monitorização</h3>
+                <p>Cria um sistema completo para o quarto do bebé:</p>
+                <ul>
+                    <li>Ao ativar "Sesta Bebé": fecha estores, liga som branco, ajusta temperatura</li>
+                    <li>Se o sensor de som detetar choro, abre estores gradualmente (luz suave)</li>
+                    <li>Se o sensor de temperatura sair do intervalo 20-22°C, envia alerta</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌅 Variação 2: Sesta com despertar suave</h3>
+                <p>Em vez de abrir os estores de repente ao fim de 1 hora, faz uma abertura gradual:</p>
+                <ul>
+                    <li>Aos 55 minutos: abrir 25%</li>
+                    <li>Aos 60 minutos: abrir 50%</li>
+                    <li>Aos 65 minutos: abrir 75%</li>
+                    <li>Aos 70 minutos: abrir 100%</li>
+                </ul>
+                <p>Isto simula o nascer do sol e evita acordares sobressaltado.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🏖️ Variação 3: Sesta de fim de semana prolongada</h3>
+                <p>Cria versões diferentes para cada ocasião:</p>
+                <ul>
+                    <li><strong>"Sesta Rápida"</strong> - 30 minutos (para recarregar)</li>
+                    <li><strong>"Sesta Normal"</strong> - 1 hora</li>
+                    <li><strong>"Sesta Rei"</strong> - 2 horas (domingo à tarde)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🌡️ Variação 4: Sesta com conforto térmico</h3>
+                <p>Combina com automações de temperatura:</p>
+                <ul>
+                    <li>Se for verão: ao ativar sesta, liga AC a 24°C (ou ventilador)</li>
+                    <li>Se for inverno: liga aquecimento a 21°C</li>
+                    <li>Desliga tudo quando a sesta terminar (ou após delay)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🚪 Variação 5: Sesta com bloqueio de entrada</h3>
+                <p>Para não seres incomodado durante a sesta:</p>
+                <ul>
+                    <li>Ativar modo "Não incomodar" no telemóvel</li>
+                    <li>Fechar porta do quarto (se tiver fecho automático)</li>
+                    <li>Desativar campainha (se tiver) ou enviar notificação "Em sesta"</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎵 Variação 6: Sesta com som ambiente</h3>
+                <p>Se tiveres colunas inteligentes:</p>
+                <ul>
+                    <li>Ao ativar: toca som de chuva ou som branco por 60 minutos</li>
+                    <li>No final: toca música suave para acordar</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Os estores fecham mas não abrem ao fim do tempo</h3>
+                <p><strong>Causa:</strong> O delay pode ser interrompido se o telefone perder ligação ou a app fechar.</p>
+                <p><strong>Solução:</strong> Usa automações baseadas na cloud em vez de cenas locais. Ou cria duas automações: uma para fechar (às 14h) e outra para abrir (às 15h).</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Acordas antes do tempo e queres cancelar a sesta</h3>
+                <p><strong>Solução:</strong> Cria uma cena "Cancelar Sesta" que:</p>
+                <ul>
+                    <li>Abre os estores imediatamente</li>
+                    <li>Cancela qualquer delay pendente (não é fácil no SmartLife, mas podes criar uma automação que abre e depois desativa a automação de fecho)</li>
+                </ul>
+            </div>
+
+            <div class="problema-box">
+                <h3>O bebé acorda sempre a horas diferentes</h3>
+                <p><strong>Solução:</strong> Usa sensor de movimento no berço. Se detetar movimento antes do tempo, aborta a sesta e abre os estores.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>A sesta é ao domingo mas durante a semana não</h3>
+                <p><strong>Solução:</strong> Na automação programada, escolhe "Repeat" apenas no Domingo. Ou cria uma cena manual que ativas só quando queres.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>No verão, o quarto fica muito quente com os estores fechados</h3>
+                <p><strong>Solução:</strong> Em dias muito quentes, em vez de fechar totalmente, fecha apenas 70% para permitir alguma circulação de ar. Ou combina com ventilador.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Esqueceste-te de ativar a sesta e o bebé já dormiu ao colo</h3>
+                <p><strong>Solução:</strong> Usa comando de voz. Enquanto estás com o bebé ao colo, dizes "Ok Google, ativar sesta do bebé" e os estores fecham sozinhos.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>O delay máximo no SmartLife é 60 minutos</h3>
+                <p><strong>Solução:</strong> Para sestas mais longas, podes encadear vários delays:</p>
+                <ul>
+                    <li>Delay 60 min → ação intermédia (ex: abrir 30%) → Delay 30 min → abrir 100%</li>
+                    <li>Ou usa duas automações: uma para fechar e outra para abrir com horário específico</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="abrir-estores-manha.html" class="relacionada-card">
+                    Abrir Estores Manhã
+                    <span>Despertar natural</span>
+                </a>
+                <a href="fechar-estores-noite.html" class="relacionada-card">
+                    Fechar Estores Noite
+                    <span>Para dormir</span>
+                </a>
+                <a href="estores-com-sol.html" class="relacionada-card">
+                    Estores com Sol
+                    <span>Acompanha o sol</span>
+                </a>
+                <a href="../iluminacao/despertar-suave.html" class="relacionada-card">
+                    Despertar Suave
+                    <span>Luz gradual</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                    <a href="#" onclick="alert('Em breve')">Contacto</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p>Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

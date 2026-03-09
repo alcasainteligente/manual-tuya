@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boas-Vindas Colorido · AL Casa Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .fixed.inset-0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .logo-icon .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-top-color: #22d3ee;
+            animation: spin 10s linear infinite;
+        }
+
+        .logo-icon .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: #22d3ee;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            text-align: right;
+        }
+
+        .header-badge .small {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .header-badge .highlight {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb a:hover {
+            color: #22d3ee;
+        }
+
+        .breadcrumb span {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        /* Cabeçalho da Automação */
+        .automacao-header {
+            margin-bottom: 40px;
+        }
+
+        .automacao-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .automacao-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge.iniciante {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge.intermedio {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge.avancado {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.divisao {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .automacao-descricao {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 700px;
+        }
+
+        /* Secções */
+        section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22d3ee;
+            margin: 24px 0 12px;
+        }
+
+        section ul, section ol {
+            padding-left: 24px;
+            color: #9ca3af;
+        }
+
+        section li {
+            margin-bottom: 12px;
+        }
+
+        .equipamentos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipamentos li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipamentos li strong {
+            color: #22d3ee;
+        }
+
+        .passo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #f97316;
+        }
+
+        .passo h4 {
+            color: #f97316;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .passo p {
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .passo .nota {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #9ca3af;
+        }
+
+        .dica-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problema-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .relacionadas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .relacionada-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .relacionada-card:hover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .relacionada-card span {
+            display: block;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 0 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-col a:hover {
+            color: #22d3ee;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .automacao-header h1 {
+                font-size: 28px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="fixed inset-0 bg-grid-pattern"></div>
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05), transparent 70%);"></div>
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(34,211,238,0.05); border-top-color: rgba(34,211,238,0.3); animation: spin 60s linear infinite;"></div>
+        <div style="position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid rgba(249,115,22,0.05); border-bottom-color: rgba(249,115,22,0.3); animation: spin 45s linear infinite reverse;"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <div class="logo-icon">
+                        <div class="ring"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AL <span>Casa Inteligente</span></h1>
+                    </div>
+                </a>
+                
+                <div class="header-badge">
+                    <div class="small">Casa Inteligente</div>
+                    <div class="highlight">Sem Obras</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="javascript:history.back()" style="color: #9ca3af; text-decoration: none;" onclick="if(document.referrer === '') { window.location.href='../../index.html'; return false; }">← Voltar</a> › <a href="../../index.html">Início</a> › 
+            <a href="../../categorias/iluminacao.html">💡 Iluminação</a> › 
+            <span>Boas-Vindas Colorido</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="automacao-header">
+            <h1>Boas-Vindas Colorido</h1>
+            <div class="automacao-meta">
+                <span class="badge avancado">⭐⭐⭐ Avançado</span>
+                <span class="badge divisao">📍 Entrada</span>
+                <span class="badge divisao">⏱️ 12 minutos</span>
+            </div>
+            <p class="automacao-descricao">Cada membro da família tem uma cor personalizada quando chega a casa. A luz da entrada muda conforme quem está a chegar.</p>
+        </div>
+
+        <section class="equipamentos">
+            <h2>📦 Equipamentos Necessários</h2>
+            <ul>
+                <li>
+                    <strong>📱 Telemóveis com GPS</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Um por membro da família</span>
+                </li>
+                <li>
+                    <strong>💡 Lâmpada RGB (cores)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Que suporte mudar de cor</span>
+                </li>
+                <li>
+                    <strong>🔗 Conta IFTTT (gratuita)</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Para integração com geofencing</span>
+                </li>
+                <li>
+                    <strong>📡 App SmartLife</strong>
+                    <span style="color: #9ca3af; margin-left: auto;">Com lâmpada configurada</span>
+                </li>
+            </ul>
+            <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">💡 <strong>Nota:</strong> Esta automação usa IFTTT porque o SmartLife não tem reconhecimento individual por geofencing. Mas funciona perfeitamente!</p>
+        </section>
+
+        <section class="passo-passo">
+            <h2>📱 Configuração Passo-a-Passo</h2>
+            
+            <div class="passo">
+                <h4>Passo 1: Preparar a lâmpada no SmartLife</h4>
+                <p>Certifica-te que a lâmpada RGB está configurada no app SmartLife e com um nome fácil (ex: "Luz Entrada").</p>
+                <p>Testa se consegues mudar as cores manualmente.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 2: Criar conta no IFTTT</h4>
+                <p>Abre o site <strong>ifttt.com</strong> ou a app e cria uma conta gratuita.</p>
+                <p>Liga os serviços:</p>
+                <ul>
+                    <li>Pesquisa por <strong>"SmartLife"</strong> e liga a tua conta</li>
+                    <li>Pesquisa por <strong>"Location"</strong> ou <strong>"Geofencing"</strong></li>
+                </ul>
+                <div class="nota">📌 O serviço de localização pode chamar-se "Location" ou "Life360" (mais preciso).</div>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 3: Criar applet para o pai (ex: cor azul)</h4>
+                <p>No IFTTT, toca em <strong>"Create"</strong>.</p>
+                <p><strong>IF (This):</strong></p>
+                <ul>
+                    <li>Escolhe <strong>"Location"</strong> → <strong>"You enter an area"</strong></li>
+                    <li>Define a área: coloca um círculo à volta da tua casa (100m de raio)</li>
+                    <li>Dá um nome: "Casa do Pai"</li>
+                </ul>
+                <p><strong>THEN (That):</strong></p>
+                <ul>
+                    <li>Escolhe <strong>"SmartLife"</strong> → <strong>"Turn on with color"</strong></li>
+                    <li>Seleciona a lâmpada "Luz Entrada"</li>
+                    <li>Escolhe a cor: <strong>Azul</strong> (#0000FF)</li>
+                    <li>Brightness: 80%</li>
+                </ul>
+                <p>Guarda com o nome: <strong>"Pai chegou a casa"</strong>.</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 4: Criar applet para a mãe (ex: cor rosa)</h4>
+                <p>Repete o processo, mas com as definições da mãe:</p>
+                <p><strong>IF:</strong> Location → You enter an area (casa) com o telemóvel da mãe</p>
+                <p><strong>THEN:</strong> SmartLife → Turn on with color</p>
+                <p>Cor: <strong>Rosa</strong> (#FF69B4)</p>
+                <p>Nome: <strong>"Mãe chegou a casa"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 5: Criar applet para o filho (ex: cor verde)</h4>
+                <p><strong>IF:</strong> Location do filho</p>
+                <p><strong>THEN:</strong> SmartLife → Turn on with color <strong>Verde</strong> (#00FF00)</p>
+                <p>Nome: <strong>"Filho chegou a casa"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 6: Criar applet para a filha (ex: cor roxa)</h4>
+                <p><strong>IF:</strong> Location da filha</p>
+                <p><strong>THEN:</strong> SmartLife → Turn on with color <strong>Roxa</strong> (#800080)</p>
+                <p>Nome: <strong>"Filha chegou a casa"</strong></p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 7: Criar applet para desligar</h4>
+                <p>Para a luz não ficar acesa toda a noite, cria um applet para desligar:</p>
+                <p><strong>IF:</strong> Location → "You exit an area" (sair da zona de casa)</p>
+                <p><strong>THEN:</strong> SmartLife → "Turn off" para a mesma lâmpada</p>
+                <p>Podes criar para cada pessoa, ou apenas um geral (a última pessoa a sair desliga).</p>
+            </div>
+
+            <div class="passo">
+                <h4>Passo 8: Testar</h4>
+                <p>Afasta-te de casa (mais de 200m) e volta. A luz deve acender na cor da pessoa que chegou.</p>
+                <p>Se duas pessoas chegarem ao mesmo tempo, a última a ativar prevalece (ou podes definir prioridades).</p>
+            </div>
+        </section>
+
+        <section class="dicas">
+            <h2>💡 Dicas para um Boas-Vindas Perfeito</h2>
+            
+            <div class="dica-box">
+                <h3>🌈 Escolhe cores significativas</h3>
+                <ul>
+                    <li>Azul → Pai</li>
+                    <li>Rosa → Mãe</li>
+                    <li>Verde → Filho</li>
+                    <li>Roxo → Filha</li>
+                    <li>Amarelo → Avós</li>
+                    <li>Laranja → Animais (quando alguém chega com o cão)</li>
+                </ul>
+            </div>
+
+            <div class="dica-box">
+                <h3>📱 Usa Life360 para maior precisão</h3>
+                <p>O serviço Location do IFTTT pode ser pouco preciso. Muitas pessoas usam o <strong>Life360</strong> (app de localização familiar) que tem melhor integração com IFTTT.</p>
+                <p>No IFTTT, em vez de Location, escolhe Life360 e liga a tua conta.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🏠 Boas-Vindas por horário</h3>
+                <p>Podes combinar com horários: se o pai chegar antes das 18h, luz azul; se chegar depois das 22h, luz vermelha (modo silencioso).</p>
+                <p>No IFTTT, podes adicionar múltiplas condições com filtros.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🎉 Ocasiões especiais</h3>
+                <p>Cria cores especiais para dias especiais:</p>
+                <ul>
+                    <li>Aniversário: luz colorida intermitente</li>
+                    <li>Natal: vermelho e verde</li>
+                    <li>Ano Novo: dourado</li>
+                    <li>Dia dos Namorados: vermelho</li>
+                </ul>
+                <p>Podes fazer isto com o serviço "Date & Time" do IFTTT.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🚗 Quem chega primeiro?</h3>
+                <p>Se duas pessoas chegarem ao mesmo tempo, podes definir prioridades: o applet do pai tem prioridade sobre o dos filhos. No IFTTT, podes desativar/ativar conforme necessário.</p>
+            </div>
+
+            <div class="dica-box">
+                <h3>🔊 Boas-Vindas com som</h3>
+                <p>Se tiveres um altifalante inteligente (Google Home/Alexa), podes adicionar uma mensagem de voz: "Bem-vindo a casa, [nome]!"</p>
+                <p>No IFTTT, em vez de SmartLife, escolhe Google Assistant ou Alexa para falar.</p>
+            </div>
+        </section>
+
+        <section class="problemas">
+            <h2>⚠️ Problemas Comuns e Soluções</h2>
+            
+            <div class="problema-box">
+                <h3>Geofencing não deteta a chegada</h3>
+                <p><strong>Soluções:</strong></p>
+                <ul>
+                    <li>Aumenta o raio da zona para 200-300m</li>
+                    <li>Certifica-te que a localização do telemóvel está sempre ativa</li>
+                    <li>Desativa a poupança de bateria para o IFTTT/Life360</li>
+                    <li>No iPhone, vai a Definições → Privacidade → Localização e certifica-te que IFTTT tem "Sempre"</li>
+                </ul>
+            </div>
+
+            <div class="problema-box">
+                <h3>A luz não muda de cor</h3>
+                <p><strong>Solução:</strong> Testa primeiro no SmartLife se a lâmpada muda de cor manualmente. Se funcionar, verifica no IFTTT se a conta SmartLife está bem ligada.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Duas cores ao mesmo tempo</h3>
+                <p><strong>Solução:</strong> Se duas pessoas chegarem ao mesmo tempo, o último applet a ser executado prevalece. Podes evitar definindo um intervalo mínimo entre deteções.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>A luz fica acesa depois de todos saírem</h3>
+                <p><strong>Solução:</strong> Cria um applet de "Última pessoa a sair" que desliga a luz. Ou usa um temporizador: a luz desliga 30 minutos após a última deteção de saída.</p>
+            </div>
+
+            <div class="problema-box">
+                <h3>Bateria do telemóvel gasta muito</h3>
+                <p><strong>Solução:</strong> O geofencing gasta bateria. Podes:</p>
+                <ul>
+                    <li>Usar Life360 que é otimizado para bateria</li>
+                    <li>Aumentar o raio para 500m (menos precisão, mas menos atualizações)</li>
+                    <li>Desativar quando não precisas (férias)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="relacionadas">
+            <h2>🔗 Automações Relacionadas</h2>
+            <div class="relacionadas-grid">
+                <a href="luz-boas-vindas.html" class="relacionada-card">
+                    Luz de Boas-Vindas
+                    <span>Versão simples</span>
+                </a>
+                <a href="luz-com-sensor-portao.html" class="relacionada-card">
+                    Luz com Sensor Portão
+                    <span>Para exterior</span>
+                </a>
+                <a href="../seguranca/simulacao-presenca.html" class="relacionada-card">
+                    Simulação Presença
+                    <span>Quando estás fora</span>
+                </a>
+                <a href="../ifttt/ifttt-webhooks.html" class="relacionada-card">
+                    IFTTT Webhooks
+                    <span>Mais integrações</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>AL Casa Inteligente</h4>
+                    <p>O teu parceiro em automação residencial</p>
+                    <p>📍 Montijo • Margem Sul</p>
+                    <p><a href="https://wa.me/351917807428" target="_blank" class="whatsapp-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                             alt="WhatsApp" 
+                             style="width: 18px; height: 18px; vertical-align: middle; margin-right: 5px;">
+                        Falar no WhatsApp
+                    </a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <a href="../../categorias/iluminacao.html">Iluminação</a>
+                    <a href="../../categorias/seguranca.html">Segurança</a>
+                    <a href="../../categorias/clima.html">Clima</a>
+                    <a href="../../categorias/eletrodomesticos.html">Energia</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Recursos</h4>
+                    <a href="#" onclick="alert('Em breve')">Sobre nós</a>
+                <a href="#" onclick="alert'Em breve'">Contacto</a>
+                <a href="#" onclick="alert'Em breve'">Privacidade</a>
+                <a href="#" onclick="alert'Em breve'">Termos</a>
+                    <a href="#" onclick="alert('Em breve')">Privacidade</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AL Casa Inteligente. Todos os direitos reservados.</p>
+                <p style="margin-top: 8px;">Montijo • Margem Sul • Lisboa</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
